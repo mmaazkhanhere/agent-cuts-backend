@@ -4,8 +4,10 @@ Updated FastAPI application using the new transcription agent package
 from fastapi import FastAPI, UploadFile, File
 from demo_agent import weather_time_agent_runner
 from transcription_agent import transcribe_video, run_transcription_agent
+from segmentation_agent.agent import run_segmentation_agent
 import tempfile
 import os
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -161,3 +163,24 @@ async def get_supported_formats():
         },
         "timestamp_precision": "Word-level accuracy when available"
     }
+
+
+@app.get('/segmentation')
+async def segmentation_agent_endpoint():
+    """Segmentation agent endpoint"""
+    # Placeholder for segmentation agent logic
+    transcript_path = "e:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\test_transcript.json"
+    with open(transcript_path, 'r') as file:
+            transcript = json.load(file)
+    transcript_json = json.dumps(transcript)
+    try:
+        response = await run_segmentation_agent(transcript_json)
+        return {
+            "status": "success",
+            "response": response
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "response": str(e)
+        }
