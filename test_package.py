@@ -1,20 +1,18 @@
-"""
-Updated simple test using the new transcription agent package
-"""
+"""Test script for the refactored multi-agent architecture"""
 import asyncio
 import os
 import json
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Import from the new transcription agent package
-from transcription_agent import transcribe_video
+# Import from the new structure
+from subagents.transcription import TranscriptionSubAgent
+from agent import run_agent
 
 load_dotenv()
 
-
-async def test_transcription_package():
-    """Test the transcription agent package"""
+async def test_transcription_subagent():
+    """Test the transcription subagent"""
     
     # Check API key
     groq_api_key = os.getenv("GROQ_API_KEY")
@@ -29,13 +27,13 @@ async def test_transcription_package():
         print("❌ Video file not found!")
         return
     
-    print(f"🎬 Testing transcription package with: {Path(video_path).name}")
+    print(f"🎬 Testing transcription subagent with: {Path(video_path).name}")
     
     try:
-        # Use the convenient transcribe_video function
-        result = await transcribe_video(
+        # Use the transcription subagent
+        transcription_agent = TranscriptionSubAgent(groq_api_key)
+        result = await transcription_agent.transcribe_video(
             video_path=video_path,
-            groq_api_key=groq_api_key,
             sentence_level=True
         )
         
@@ -57,25 +55,10 @@ async def test_transcription_package():
                     print()
                 
                 # Save results
-                output_file = f"package_test_result_{Path(video_path).stem}.json"
+                output_file = f"test_result_{Path(video_path).stem}.json"
                 with open(output_file, 'w', encoding='utf-8') as f:
                     json.dump(result, f, indent=2, ensure_ascii=False)
                 print(f"💾 Results saved to: {output_file}")
-                
-                # Create simple sentence export
-                simple_sentences = [
-                    {
-                        "start_time": s['start_time'],
-                        "end_time": s['end_time'], 
-                        "text": s['text']
-                    }
-                    for s in sentences
-                ]
-                
-                simple_file = f"sentences_{Path(video_path).stem}.json"
-                with open(simple_file, 'w', encoding='utf-8') as f:
-                    json.dump(simple_sentences, f, indent=2, ensure_ascii=False)
-                print(f"📄 Simple sentences saved to: {simple_file}")
                 
         else:
             print(f"❌ Failed: {result.get('error')}")
@@ -85,6 +68,31 @@ async def test_transcription_package():
         import traceback
         traceback.print_exc()
 
+async def test_main_agent():
+    """Test the main agent"""
+    print("\n🤖 Testing main agent...")
+    
+    # Test weather
+    response = await run_agent("What's the weather in New York?")
+    print(f"Weather response: {response}")
+    
+    # Test time
+    response = await run_agent("What time is it in New York?")
+    print(f"Time response: {response}")
+
+async def main():
+    """Run all tests"""
+    print("🧪 Testing refactored multi-agent architecture\n")
+    
+    choice = input("What to test?\n1. Transcription subagent\n2. Main agent\n3. Both\nChoice: ")
+    
+    if choice == "1":
+        await test_transcription_subagent()
+    elif choice == "2":
+        await test_main_agent()
+    elif choice == "3":
+        await test_main_agent()
+        await test_transcription_subagent()
 
 if __name__ == "__main__":
-    asyncio.run(test_transcription_package())
+    asyncio.run(main())

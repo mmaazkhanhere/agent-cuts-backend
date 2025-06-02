@@ -1,6 +1,5 @@
 """
-Comprehensive test script for the transcription agent
-This is the single test file you need to run everything
+Comprehensive test script for the refactored multi-agent system
 """
 import asyncio
 import os
@@ -11,31 +10,37 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Add project root to path
-project_root = Path(__file__).parent.parent  # Go up one level to the root folder
+project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-# Import the transcription agent
-from agents.transcription_agent import run_transcription_agent, transcribe_video_file
+# Import from new structure
+from subagents.transcription import TranscriptionSubAgent
+from agent import run_agent
 
 load_dotenv()
-
 
 class TestRunner:
     def __init__(self):
         self.groq_api_key = os.getenv("GROQ_API_KEY")
+        self.google_api_key = os.getenv("GOOGLE_API_KEY")
         self.test_results = []
         
     def check_prerequisites(self):
         """Check if all prerequisites are met"""
         print("🔍 Checking prerequisites...")
         
-        # Check API key
+        # Check API keys
         if not self.groq_api_key:
             print("❌ GROQ_API_KEY not found in environment variables")
             print("   Please set GROQ_API_KEY in your .env file")
             return False
         else:
             print("✅ GROQ_API_KEY found")
+            
+        if self.google_api_key:
+            print("✅ GOOGLE_API_KEY found (optional)")
+        else:
+            print("⚠️  GOOGLE_API_KEY not found (optional for main agent)")
         
         # Check FFmpeg
         try:
@@ -70,20 +75,39 @@ class TestRunner:
         """Find available test videos"""
         print("🎬 Looking for test videos...")
         
-        video_dir = "video/test.mp4"
-
-        return [Path(video_dir)] if Path(video_dir).exists() else []
+        video_paths = [
+            Path("video/test.mp4"),
+            Path("../video/test.mp4"),
+            Path("test.mp4")
+        ]
+        
+        found_videos = []
+        for path in video_paths:
+            if path.exists():
+                found_videos.append(path)
+                print(f"   ✅ Found: {path}")
+        
+        if not found_videos:
+            print("   ❌ No test videos found")
+            
+        return found_videos
     
-    async def test_direct_function(self, video_path: Path):
-        """Test the transcription function directly"""
+    async def test_transcription_subagent(self, video_path: Path):
+        """Test the transcription subagent"""
         print(f"\n{'='*60}")
-        print(f"🧪 DIRECT FUNCTION TEST: {video_path.name}")
+        print(f"🧪 TRANSCRIPTION SUBAGENT TEST: {video_path.name}")
         print(f"{'='*60}")
         
         start_time = time.time()
         
         try:
-            result = await transcribe_video_file(str(video_path))
+            # Create transcription subagent
+            transcription_agent = TranscriptionSubAgent(self.groq_api_key)
+            result = await transcription_agent.transcribe_video(
+                str(video_path),
+                sentence_level=True
+            )
+            
             processing_time = time.time() - start_time
             
             if result['status'] == 'success':
@@ -91,14 +115,22 @@ class TestRunner:
                 print(f"📊 Words: {result['metadata']['total_words']}")
                 print(f"📈 Confidence: {result['metadata']['avg_confidence']:.3f}")
                 print(f"🎯 Chunks: {result['metadata']['successful_chunks']}/{result['metadata']['total_chunks']}")
-                print(f"📝 Preview: {result['full_text'][:150]}...")
+                
+                # Show sentence examples if available
+                if 'sentence_segments' in result:
+                    print(f"📝 Sentences: {len(result['sentence_segments'])}")
+                    print("\n🔍 First 3 sentences:")
+                    for i, sentence in enumerate(result['sentence_segments'][:3]):
+                        print(f"   {i+1}. [{sentence['start_time']:.1f}s - {sentence['end_time']:.1f}s]")
+                        print(f"      \"{sentence['text']}\"")
                 
                 # Save result
-                output_dir = "output"
-                output_file = f"test_result_{video_path.stem}.json"
-                with open(os.path.join(output_dir, output_file), 'w', encoding='utf-8') as f:
+                output_dir = Path("output")
+                output_dir.mkdir(exist_ok=True)
+                output_file = output_dir / f"test_result_{video_path.stem}.json"
+                with open(output_file, 'w', encoding='utf-8') as f:
                     json.dump(result, f, indent=2, ensure_ascii=False)
-                print(f"💾 Saved to: {output_dir}/{output_file}")
+                print(f"\n💾 Saved to: {output_file}")
                 
                 return True
             else:
@@ -107,142 +139,124 @@ class TestRunner:
                 
         except Exception as e:
             print(f"❌ Exception: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
-    async def test_adk_agent(self, video_path: Path):
-        """Test the ADK agent"""
+    async def test_main_agent(self):
+        """Test the main agent"""
         print(f"\n{'='*60}")
-        print(f"🤖 ADK AGENT TEST: {video_path.name}")
+        print(f"🤖 MAIN AGENT TEST")
         print(f"{'='*60}")
         
-        start_time = time.time()
+        test_prompts = [
+            "What's the weather in New York?",
+            "What time is it in New York?",
+            "Tell me about the weather and time in New York"
+        ]
         
-        try:
-            response = await run_transcription_agent(str(video_path))
-            processing_time = time.time() - start_time
-            
-            print(f"⏱️  Agent response time: {processing_time:.2f} seconds")
-            print(f"📝 Agent response preview:")
-            print(f"   {response[:200]}...")
-            
-            # Save agent response
-            output_dir = "output"
-
-            output_file = f"agent_response_{video_path.stem}.txt"
-            with open(os.path.join(output_dir, output_file), 'w', encoding='utf-8') as f:
-                f.write(response)
-            print(f"💾 Agent response saved to: {output_dir}/{output_file}")
-            
-            return True
-            
-        except Exception as e:
-            print(f"❌ Agent test failed: {e}")
-            return False
+        success_count = 0
+        
+        for prompt in test_prompts:
+            print(f"\n📝 Testing: {prompt}")
+            try:
+                response = await run_agent(prompt)
+                print(f"   Response: {response[:200]}...")
+                success_count += 1
+            except Exception as e:
+                print(f"   ❌ Error: {e}")
+        
+        print(f"\n✅ Main agent tests: {success_count}/{len(test_prompts)} passed")
+        return success_count == len(test_prompts)
     
     async def run_comprehensive_test(self):
         """Run all tests"""
-        print("🚀 COMPREHENSIVE TRANSCRIPTION AGENT TEST")
+        print("🚀 COMPREHENSIVE MULTI-AGENT SYSTEM TEST")
         print("=" * 60)
         
         # Check prerequisites
         if not self.check_prerequisites():
             return
         
-        # Find test videos
+        # Test main agent
+        print("\n🤖 Testing Main Agent...")
+        main_agent_success = await self.test_main_agent()
+        
+        # Find test videos for transcription
         test_videos = self.find_test_videos()
-        if not test_videos:
-            print("\n⚠️  No test videos found!")
-            print("📝 Please add a video file to test with and run again.")
-            return
         
-        print(f"\n🎯 Running tests with {len(test_videos)} video(s)...")
-        
-        # Test each video
-        for i, video_path in enumerate(test_videos, 1):
-            print(f"\n📹 Testing video {i}/{len(test_videos)}: {video_path.name}")
+        if test_videos:
+            print(f"\n🎯 Running transcription tests with {len(test_videos)} video(s)...")
             
-            # Test 1: Direct function
-            direct_success = await self.test_direct_function(video_path)
-            
-            # Test 2: ADK agent 
-            agent_success = await self.test_adk_agent(video_path)
-            
-            self.test_results.append({
-                'video': video_path.name,
-                'direct_function': direct_success,
-                'adk_agent': agent_success
-            })
-            
-            # Wait between tests to avoid rate limits
-            if i < len(test_videos):
-                print("\n⏳ Waiting 3 seconds before next test...")
-                await asyncio.sleep(3)
+            for i, video_path in enumerate(test_videos, 1):
+                print(f"\n📹 Testing video {i}/{len(test_videos)}: {video_path.name}")
+                
+                # Test transcription subagent
+                transcription_success = await self.test_transcription_subagent(video_path)
+                
+                self.test_results.append({
+                    'video': video_path.name,
+                    'transcription_subagent': transcription_success
+                })
+                
+                # Wait between tests to avoid rate limits
+                if i < len(test_videos):
+                    print("\n⏳ Waiting 3 seconds before next test...")
+                    await asyncio.sleep(3)
+        else:
+            print("\n⚠️  No test videos found for transcription tests")
         
         # Print summary
-        self.print_test_summary()
+        self.print_test_summary(main_agent_success)
     
-    def print_test_summary(self):
+    def print_test_summary(self, main_agent_success):
         """Print test summary"""
         print(f"\n{'='*60}")
         print("📊 TEST SUMMARY")
         print(f"{'='*60}")
         
-        total_tests = len(self.test_results) * 2
-        passed_tests = sum(
-            (1 if result['direct_function'] else 0) + 
-            (1 if result['adk_agent'] else 0)
-            for result in self.test_results
-        )
+        print(f"\n🤖 Main Agent: {'✅ Passed' if main_agent_success else '❌ Failed'}")
         
-        print(f"Total tests run: {total_tests}")
-        print(f"Tests passed: {passed_tests}")
-        print(f"Tests failed: {total_tests - passed_tests}")
-        print(f"Success rate: {(passed_tests/total_tests)*100:.1f}%")
+        if self.test_results:
+            print(f"\n📹 Transcription Tests:")
+            for result in self.test_results:
+                print(f"   {result['video']}: {'✅' if result['transcription_subagent'] else '❌'}")
         
-        print(f"\nDetailed results:")
-        for result in self.test_results:
-            print(f"  📹 {result['video']}:")
-            print(f"    Direct function: {'✅' if result['direct_function'] else '❌'}")
-            print(f"    ADK agent: {'✅' if result['adk_agent'] else '❌'}")
-        
-        print(f"\n📁 Check current directory for output files:")
+        print(f"\n📁 Check output directory for result files")
         print(f"   - test_result_*.json (transcription results)")
-        print(f"   - agent_response_*.txt (agent responses)")
 
-
-async def quick_test_with_manual_path():
-    """Quick test where user provides video path manually"""
-    print("🎬 Quick Manual Test")
+async def quick_test():
+    """Quick test with manual video path"""
+    print("🎬 Quick Test Mode")
     print("=" * 40)
-    
-    video_path = "video/test.mp4"  # Default path, can be overridden by user input
-    
-    if not os.path.exists(video_path):
-        print("❌ File not found!")
-        return
     
     test_runner = TestRunner()
     
     if not test_runner.check_prerequisites():
         return
     
-    video_path = Path(video_path)
-    print(f"\n🚀 Testing with: {video_path.name}")
+    print("\nWhat would you like to test?")
+    print("1. Main agent (weather/time)")
+    print("2. Transcription subagent")
+    print("3. Both")
     
-    # Test direct function
-    success = await test_runner.test_direct_function(video_path)
+    choice = input("Enter choice (1-3): ").strip()
     
-    if success:
-        print("\n✅ Test completed successfully!")
-    else:
-        print("\n❌ Test failed!")
-
+    if choice in ["1", "3"]:
+        await test_runner.test_main_agent()
+    
+    if choice in ["2", "3"]:
+        video_path = input("\nEnter video file path: ").strip().strip('"')
+        if os.path.exists(video_path):
+            await test_runner.test_transcription_subagent(Path(video_path))
+        else:
+            print("❌ Video file not found!")
 
 def main():
     """Main entry point"""
     print("Choose test mode:")
-    print("1. Automatic test (searches for videos)")
-    print("2. Manual test (you provide video path)")
+    print("1. Comprehensive test (all components)")
+    print("2. Quick test (interactive)")
     
     choice = input("Enter choice (1 or 2): ").strip()
     
@@ -250,10 +264,9 @@ def main():
         test_runner = TestRunner()
         asyncio.run(test_runner.run_comprehensive_test())
     elif choice == "2":
-        asyncio.run(quick_test_with_manual_path())
+        asyncio.run(quick_test())
     else:
         print("Invalid choice!")
-
 
 if __name__ == "__main__":
     main()
