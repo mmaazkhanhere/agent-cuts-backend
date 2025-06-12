@@ -5,6 +5,7 @@ from fastapi import FastAPI, UploadFile, File
 from demo_agent import weather_time_agent_runner
 from transcription_agent import transcribe_video, run_transcription_agent
 from segmentation_agent.agent import run_segmentation_agent
+from ranking_agent.agent import run_ranking_agent
 import tempfile
 import os
 import json
@@ -175,6 +176,27 @@ async def segmentation_agent_endpoint():
     transcript_json = json.dumps(transcript)
     try:
         response = await run_segmentation_agent(transcript_json)
+        return {
+            "status": "success",
+            "response": response
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "response": str(e)
+        }
+    
+
+@app.get('/ranking')
+async def segmentation_agent_endpoint():
+    """Ranking agent endpoint"""
+    # Placeholder for segmentation agent logic
+    segment_path = "e:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\output\\segmentation_response.json"
+    with open(segment_path, 'r') as file:
+            segments = json.load(file)
+    segments_json = json.dumps(segments)
+    try:
+        response = await run_ranking_agent(segments_json)
         return {
             "status": "success",
             "response": response
