@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+import json
 
 from google.adk.agents import LlmAgent, SequentialAgent
 from google.adk.runners import Runner
@@ -21,53 +22,98 @@ class RankingOutput(BaseModel):
     clarity_score: int = Field(description="Clarity score of the segment out of 10")
     engagement_score: int = Field(description="Engagement score of the segment out of 10")
     trending_score: int = Field(description="Trending score of the segment out of 10")
-    overall_score: int = Field(description="Overall score of the segment out of 10")
+    overall_score: float = Field(description="Overall score of the segment out of 10")
 
-
-    
 class RankingAgentOutput(BaseModel):
     ranked_list: list[RankingOutput] = Field(description="List of segments ranked based on overall score")
 
-google_search_agent = LlmAgent(
-    name="segment_scorer_agent", # Renamed for clarity
+# Combined scoring agent that does everything in one step
+combined_scoring_agent = LlmAgent(
+    name="combined_scoring_agent",
     model="gemini-2.0-flash",
-    description="Analyze video segments, score them based on clarity, engagement, and trending potential, and output the scored segments.",
+    description="Analyze segments for clarity, engagement, and use search for trending scores.",
     instruction=(
-        "You will receive a JSON object containing a list of video segments. Each segment includes details such as topic, transcript, start time, and end time. "
-        "For each segment, perform the following steps:\n"
-        "1. Using Google Search, assess the trending potential of the segment's topic. Search for recent news, social media trends, and overall interest in the topic.\n"
-        "2. Using Google Search, assess the engagement potential of the segment's content. Consider if the transcript's language, questions asked, or calls to action would likely engage viewers.\n"
-        "3. Assign a clarity score (out of 10) based on the transcript's readability and coherence.\n"
-        "4. Assign an engagement score (out of 10) based on your assessment of its engagement potential.\n"
-        "5. Assign a trending score (out of 10) based on your assessment of its trending potential.\n"
-        "6. Calculate an overall score (out of 10) for each segment. You can use a weighted average (e.g., 40% trending, 30% engagement, 30% clarity) or your own logic.\n"
-        "Finally, output a JSON array where each object in the array represents a segment with its original details and the newly calculated clarity_score, engagement_score, trending_score, and overall_score. Ensure the output structure matches the `RankingOutput` Pydantic model's data fields for each item in the list."
+        "You will receive a JSON array of video segments. For each segment:\n\n"
+        
+        "STEP 1 - CLARITY SCORING (1-10) based on transcript:\n"
+        "- 9-10: Crystal clear, well-structured, complete thoughts\n"
+        "- 7-8: Mostly clear with good flow\n"
+        "- 5-6: Some confusion, moderate structure issues\n"
+        "- 3-4: Difficult to follow, poor structure\n"
+        "- 1-2: Very confusing, no clear message\n\n"
+        
+        "STEP 2 - ENGAGEMENT SCORING (1-10) based on transcript:\n"
+        "- 9-10: Personal stories, emotional content, relatable\n"
+        "- 7-8: Interesting anecdotes, some emotional appeal\n"
+        "- 5-6: Standard content, some interesting points\n"
+        "- 3-4: Dry, academic, few hooks\n"
+        "- 1-2: Boring, no emotional connection\n\n"
+        
+        "STEP 3 - TRENDING SCORING (1-10) using Google Search:\n"
+        "- Extract key topics from the segment\n"
+        "- Search for '[topic] 2025 trending' or '[topic] news today'\n"
+        "- 9-10: Highly trending with recent news\n"
+        "- 7-8: Some recent coverage\n"
+        "- 5-6: Older coverage, niche interest\n"
+        "- 3-4: Minimal coverage\n"
+        "- 1-2: No recent interest\n\n"
+        
+        "STEP 4 - OVERALL SCORE:\n"
+        "Calculate: (clarity * 0.25) + (engagement * 0.40) + (trending * 0.35)\n"
+        "Round to 1 decimal place\n\n"
+        
+        "Output a JSON array with all segments including their scores.\n"
+        "Each segment should have: topic, transcript, start_time, end_time, "
+        "clarity_score, engagement_score, trending_score, and overall_score."
     ),
     tools=[google_search],
-    output_key="score"
-    # No output_key needed if the formatter agent expects a list of the parsed outputs
+    output_key="scored_segments"
 )
 
+# Final formatting agent
 formatter_agent = LlmAgent(
     name="formatter_agent",
     model="gemini-2.0-flash",
-    description="Sorts and formats the scored video segments into a structured JSON output.",
+    description="Sort and format the scored segments.",
     instruction=(
-        "You will receive a list of video segments, each with clarity_score, engagement_score, trending_score, and overall_score. "
-        "Your task is to sort this list in descending order based on the 'overall_score'. "
-        "Then, format the sorted list into a JSON object with a single key 'ranked_list', where the value is the sorted list of segments. "
-        "Ensure the output conforms to the `RankingAgentOutput` Pydantic schema."
+        "You receive a JSON array of segments with all scores.\n\n"
+        
+        "Your tasks:\n"
+        "1. Verify all segments have valid scores (1-10 for individual scores)\n"
+        "2. Recalculate overall_score if needed: (clarity * 0.25) + (engagement * 0.40) + (trending * 0.35)\n"
+        "3. Sort segments by overall_score in descending order\n"
+        "4. Format the output EXACTLY as:\n\n"
+        
+        "{\n"
+        '  "ranked_list": [\n'
+        "    {\n"
+        '      "segment": {\n'
+        '        "topic": "...",\n'
+        '        "transcript": "...",\n'
+        '        "start_time": "...",\n'
+        '        "end_time": "..."\n'
+        "      },\n"
+        '      "clarity_score": X,\n'
+        '      "engagement_score": X,\n'
+        '      "trending_score": X,\n'
+        '      "overall_score": X.X\n'
+        "    },\n"
+        "    ...\n"
+        "  ]\n"
+        "}"
     ),
     output_schema=RankingAgentOutput,
-    output_key="ranked_list"
+    output_key="final_ranking"
 )
 
+# Create the sequential pipeline
 root_agent = SequentialAgent(
-    name="root_agent",
-    description="Root agent that orchestrates the ranking process",
-    sub_agents=[google_search_agent, formatter_agent]
+    name="video_segment_ranker",
+    description="Ranks video segments based on clarity, engagement, and trending potential",
+    sub_agents=[combined_scoring_agent, formatter_agent]
 )
 
+# Initialize session service
 session_service = InMemorySessionService()
 APP_NAME = "ranking_app"
 USER_ID = "default_user"
@@ -79,24 +125,46 @@ runner = Runner(
     session_service=session_service
 )
 
-async def run_ranking_agent(transcript):
-    """Run the ADK ranking agent"""
+async def run_ranking_agent(segments_json):
+    """
+    Run the ADK ranking agent
+    
+    Args:
+        segments_json: JSON string or list containing video segments
+    
+    Returns:
+        JSON string with ranked segments or error message
+    """
     gemini_api_key = os.getenv("GOOGLE_API_KEY")
     if not gemini_api_key:
-        return "GOOGLE_API_KEY not found in environment variables"
+        return json.dumps({"error": "GOOGLE_API_KEY not found in environment variables"})
+    
+    # Convert to string if it's a list
+    if isinstance(segments_json, list):
+        segments_json = json.dumps(segments_json)
     
     new_message_content = types.Content(
         role="user",
-        parts=[types.Part(text=transcript)]
+        parts=[types.Part(text=segments_json)]
     )
 
-    final_response = "No response received."
+    final_response = None
     try:
         # Ensure session exists
-        if not await session_service.get_session(app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID):
-            await session_service.create_session(app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID)
+        session = await session_service.get_session(
+            app_name=APP_NAME, 
+            user_id=USER_ID, 
+            session_id=SESSION_ID
+        )
+        if not session:
+            await session_service.create_session(
+                app_name=APP_NAME, 
+                user_id=USER_ID, 
+                session_id=SESSION_ID
+            )
 
-        for event in runner.run(
+        # Run the agent pipeline
+        async for event in runner.run_async(
             user_id=USER_ID,
             session_id=SESSION_ID,
             new_message=new_message_content
@@ -108,8 +176,66 @@ async def run_ranking_agent(transcript):
                             final_response = part.text
                             break
                 break
+                
     except Exception as e:
         print(f"Error during ranking agent run: {e}")
-        final_response = f"An error occurred: {e}"
+        
+        # Fallback: If there's an error, try to at least score based on transcript
+        try:
+            segments = json.loads(segments_json)
+            fallback_result = process_segments_fallback(segments)
+            return json.dumps(fallback_result)
+        except:
+            return json.dumps({"error": f"An error occurred: {str(e)}"})
 
-    return final_response
+    return final_response if final_response else json.dumps({"error": "No response received"})
+
+
+def process_segments_fallback(segments):
+    """
+    Fallback processing when API calls fail
+    Scores based on simple heuristics
+    """
+    ranked_list = []
+    
+    for segment in segments:
+        # Simple heuristic scoring based on transcript length and keywords
+        transcript = segment.get('transcript', '')
+        
+        # Clarity: Based on sentence structure (periods, complete thoughts)
+        sentences = transcript.count('.') + transcript.count('!') + transcript.count('?')
+        clarity_score = min(10, max(1, sentences // 5 + 3))
+        
+        # Engagement: Based on personal pronouns, questions, emotional words
+        engagement_keywords = ['I', 'me', 'my', 'you', 'story', 'feel', 'think', 'believe', '?']
+        engagement_count = sum(1 for word in engagement_keywords if word in transcript)
+        engagement_score = min(10, max(1, engagement_count + 2))
+        
+        # Trending: Default to moderate since we can't search
+        trending_score = 5
+        
+        # Calculate overall
+        overall_score = round(
+            (clarity_score * 0.25) + 
+            (engagement_score * 0.40) + 
+            (trending_score * 0.35), 
+            1
+        )
+        
+        ranked_list.append({
+            "segment": {
+                "topic": segment.get('topic', ''),
+                "transcript": segment.get('transcript', ''),
+                "start_time": segment.get('start_time', ''),
+                "end_time": segment.get('end_time', '')
+            },
+            "clarity_score": clarity_score,
+            "engagement_score": engagement_score,
+            "trending_score": trending_score,
+            "overall_score": overall_score
+        })
+    
+    # Sort by overall score
+    ranked_list.sort(key=lambda x: x['overall_score'], reverse=True)
+    
+    return {"ranked_list": ranked_list}

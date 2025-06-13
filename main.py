@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI(title="ClipGenius Transcription API", version="2.0")
 
+
+
 @app.get("/")
 def get_root():
     return {
