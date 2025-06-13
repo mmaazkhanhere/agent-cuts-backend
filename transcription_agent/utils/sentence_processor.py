@@ -37,7 +37,11 @@ class SentenceProcessor:
                 'start': start_time,
                 'end': end_time
             })
-            current_sentence_text += word
+            # Add space before word if not the first word
+            if current_sentence_text:
+                current_sentence_text += " " + word
+            else:
+                current_sentence_text = word
             
             if self._is_sentence_ending(word):
                 if current_sentence_words:

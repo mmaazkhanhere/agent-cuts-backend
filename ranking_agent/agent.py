@@ -62,9 +62,10 @@ combined_scoring_agent = LlmAgent(
         "Calculate: (clarity * 0.25) + (engagement * 0.40) + (trending * 0.35)\n"
         "Round to 1 decimal place\n\n"
         
-        "Output a JSON array with all segments including their scores.\n"
+        "Return ONLY a raw JSON array, no markdown formatting.\n"
         "Each segment should have: topic, transcript, start_time, end_time, "
-        "clarity_score, engagement_score, trending_score, and overall_score."
+        "clarity_score, engagement_score, trending_score, and overall_score.\n\n"
+        "IMPORTANT: Return ONLY the JSON array, no ```json``` wrapping."
     ),
     tools=[google_search],
     output_key="scored_segments"
@@ -82,8 +83,9 @@ formatter_agent = LlmAgent(
         "1. Verify all segments have valid scores (1-10 for individual scores)\n"
         "2. Recalculate overall_score if needed: (clarity * 0.25) + (engagement * 0.40) + (trending * 0.35)\n"
         "3. Sort segments by overall_score in descending order\n"
-        "4. Format the output EXACTLY as:\n\n"
+        "4. Return ONLY raw JSON, no markdown formatting, no extra text\n\n"
         
+        "Output format:\n"
         "{\n"
         '  "ranked_list": [\n'
         "    {\n"
@@ -97,10 +99,10 @@ formatter_agent = LlmAgent(
         '      "engagement_score": X,\n'
         '      "trending_score": X,\n'
         '      "overall_score": X.X\n'
-        "    },\n"
-        "    ...\n"
+        "    }\n"
         "  ]\n"
-        "}"
+        "}\n\n"
+        "IMPORTANT: Return ONLY the JSON object, no ```json``` wrapping, no explanations."
     ),
     output_schema=RankingAgentOutput,
     output_key="final_ranking"
@@ -188,7 +190,36 @@ async def run_ranking_agent(segments_json):
         except:
             return json.dumps({"error": f"An error occurred: {str(e)}"})
 
-    return final_response if final_response else json.dumps({"error": "No response received"})
+    # Clean the response to remove markdown code blocks
+    if final_response:
+        final_response = final_response.strip()
+        if final_response.startswith("```json"):
+            final_response = final_response[7:]  # Remove ```json
+        if final_response.startswith("```"):
+            final_response = final_response[3:]   # Remove ```
+        if final_response.endswith("```"):
+            final_response = final_response[:-3]  # Remove trailing ```
+        final_response = final_response.strip()
+        
+        # Validate it's proper JSON and ensure sorting
+        try:
+            parsed_result = json.loads(final_response)
+            
+            # Ensure proper sorting by overall_score
+            if isinstance(parsed_result, dict) and 'ranked_list' in parsed_result:
+                ranked_list = parsed_result['ranked_list']
+                ranked_list.sort(key=lambda x: x.get('overall_score', 0), reverse=True)
+                parsed_result['ranked_list'] = ranked_list
+            elif isinstance(parsed_result, list):
+                parsed_result.sort(key=lambda x: x.get('overall_score', 0), reverse=True)
+                parsed_result = {"ranked_list": parsed_result}
+            
+            return json.dumps(parsed_result)
+        except json.JSONDecodeError:
+            # If it's not valid JSON, fall back to error
+            pass
+            
+    return json.dumps({"error": "No valid response received"})
 
 
 def process_segments_fallback(segments):
