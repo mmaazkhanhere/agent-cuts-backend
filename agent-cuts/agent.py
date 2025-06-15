@@ -5,6 +5,7 @@ from .sub_agents.transcription_agent import transcription_agent
 from .sub_agents.segmentation_agent import segmentation_agent
 from .sub_agents.ranking_agent import ranking_agent
 from .sub_agents.video_segmentation_agent import video_segmentation_agent
+from .sub_agents.copywriter_agent import copywrite_agent
 
 
 agent_cut = SequentialAgent(
@@ -15,5 +16,6 @@ agent_cut = SequentialAgent(
         segmentation_agent,
         ranking_agent,
         video_segmentation_agent,
+        copywrite_agent
     ]
 )
