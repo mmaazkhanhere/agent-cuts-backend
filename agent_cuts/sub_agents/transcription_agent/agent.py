@@ -66,7 +66,7 @@ formatter_agent = Agent(
     output_key="formatter_output"
 )
 
-root_agent = SequentialAgent(
+transcription_agent = SequentialAgent(
     name="transcription_agent",
     description="Transcription agent that converts video files to text with sentence-level timestamps",
     sub_agents=[audio_transcription_agent, formatter_agent]
