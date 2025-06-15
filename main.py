@@ -6,6 +6,8 @@ from demo_agent import weather_time_agent_runner
 from transcription_agent import transcribe_video, run_transcription_agent
 from segmentation_agent.agent import run_segmentation_agent
 from ranking_agent.agent import run_ranking_agent
+from video_segmentation_agent.agent import run_video_segmentation_agent
+
 import tempfile
 import os
 import json
@@ -199,6 +201,27 @@ async def segmentation_agent_endpoint():
     segments_json = json.dumps(segments)
     try:
         response = await run_ranking_agent(segments_json)
+        return {
+            "status": "success",
+            "response": response
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "response": str(e)
+        }
+    
+
+@app.get('/video_segment')
+async def video_segmentation_endpoint():
+    """Video segmentation agent endpoint"""
+    # Placeholder for segmentation agent logic
+    ranking_path = "e:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\output\\ranking_response.json"
+    with open(ranking_path, 'r') as file:
+            ranking = json.load(file)
+    ranking_json = json.dumps(ranking)
+    try:
+        response = await run_video_segmentation_agent(ranking_json)
         return {
             "status": "success",
             "response": response
