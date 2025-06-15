@@ -38,7 +38,7 @@ FORMATTER_AGENT_PROMPT = """You receive a JSON array of segments with all scores
     Your tasks:\n
     1. Verify all segments have valid scores (1-10 for individual scores)\n
     2. Recalculate overall_score if needed: (clarity * 0.25) + (engagement * 0.40) + (trending * 0.35)\n
-    3. Sort segments by overall_score in descending order\n
+    3. Sort segments by overall_score in descending order (highest score first)\n
     4. Return ONLY raw JSON, no markdown formatting, no extra text\n\n
     
     Output format:\n
@@ -58,5 +58,5 @@ FORMATTER_AGENT_PROMPT = """You receive a JSON array of segments with all scores
         }\n
         ]\n
     }\n\n
-    IMPORTANT: Return ONLY the JSON object, no ```json``` wrapping, no explanations.
+    IMPORTANT: Return ONLY the JSON object, sorted by overall_score in descending order, no ```json``` wrapping, no explanations.
 """
