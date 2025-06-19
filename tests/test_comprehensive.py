@@ -1,259 +1,333 @@
-"""
-Comprehensive test script for the transcription agent
-This is the single test file you need to run everything
-"""
 import asyncio
+import aiohttp
 import os
-import sys
 import time
 import json
-from pathlib import Path
-from dotenv import load_dotenv
+from datetime import datetime
 
-# Add project root to path
-project_root = Path(__file__).parent.parent  # Go up one level to the root folder
-sys.path.append(str(project_root))
-
-# Import the transcription agent
-from agents.transcription_agent import run_transcription_agent, transcribe_video_file
-
-load_dotenv()
-
-
-class TestRunner:
-    def __init__(self):
-        self.groq_api_key = os.getenv("GROQ_API_KEY")
-        self.test_results = []
+class VideoProcessingTester:
+    def __init__(self, base_url="http://localhost:8000"):
+        self.base_url = base_url
+        self.session = None
+        self.unique_phrase = None
         
-    def check_prerequisites(self):
-        """Check if all prerequisites are met"""
-        print("🔍 Checking prerequisites...")
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        return self
         
-        # Check API key
-        if not self.groq_api_key:
-            print("❌ GROQ_API_KEY not found in environment variables")
-            print("   Please set GROQ_API_KEY in your .env file")
-            return False
-        else:
-            print("✅ GROQ_API_KEY found")
-        
-        # Check FFmpeg
-        try:
-            import ffmpeg
-            print("✅ ffmpeg-python installed")
-        except ImportError:
-            print("❌ ffmpeg-python not installed")
-            print("   Run: pip install ffmpeg-python")
-            return False
-        
-        # Check other dependencies
-        try:
-            from pydub import AudioSegment
-            print("✅ pydub installed")
-        except ImportError:
-            print("❌ pydub not installed") 
-            print("   Run: pip install pydub")
-            return False
-            
-        try:
-            from groq import Groq
-            print("✅ groq installed")
-        except ImportError:
-            print("❌ groq not installed")
-            print("   Run: pip install groq")
-            return False
-            
-        print("✅ All prerequisites met!\n")
-        return True
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.session.close()
     
-    def find_test_videos(self):
-        """Find available test videos"""
-        print("🎬 Looking for test videos...")
+    async def test_upload_video(self, video_path="video/test.mp4"):
+        """Test 1: Upload video"""
+        print("\n🧪 TEST 1: Upload Video")
+        print("=" * 50)
         
-        video_dir = "video/test.mp4"
-
-        return [Path(video_dir)] if Path(video_dir).exists() else []
-    
-    async def test_direct_function(self, video_path: Path):
-        """Test the transcription function directly"""
-        print(f"\n{'='*60}")
-        print(f"🧪 DIRECT FUNCTION TEST: {video_path.name}")
-        print(f"{'='*60}")
-        
-        start_time = time.time()
-        
-        try:
-            result = await transcribe_video_file(str(video_path))
-            processing_time = time.time() - start_time
+        # Convert to absolute path
+        if not os.path.isabs(video_path):
+            video_path = os.path.abspath(video_path)
             
-            if result['status'] == 'success':
-                print(f"✅ Success in {processing_time:.2f} seconds")
-                print(f"📊 Words: {result['metadata']['total_words']}")
-                print(f"📈 Confidence: {result['metadata']['avg_confidence']:.3f}")
-                print(f"🎯 Chunks: {result['metadata']['successful_chunks']}/{result['metadata']['total_chunks']}")
-                print(f"📝 Preview: {result['full_text'][:150]}...")
+        print(f"📂 Checking video file: {video_path}")
+        
+        if not os.path.exists(video_path):
+            print(f"❌ Error: Video file not found: {video_path}")
+            print(f"   Current directory: {os.getcwd()}")
+            return False
+            
+        file_size = os.path.getsize(video_path) / (1024 * 1024)  # MB
+        print(f"   File size: {file_size:.2f} MB")
+            
+        try:
+            with open(video_path, 'rb') as f:
+                data = aiohttp.FormData()
+                data.add_field('file', f, filename=os.path.basename(video_path), 
+                             content_type='video/mp4')
+                print(f"📂 Uploading video: {os.path.basename(video_path)}")
                 
-                # Save result
-                output_dir = "output"
-                output_file = f"test_result_{video_path.stem}.json"
-                with open(os.path.join(output_dir, output_file), 'w', encoding='utf-8') as f:
-                    json.dump(result, f, indent=2, ensure_ascii=False)
-                print(f"💾 Saved to: {output_dir}/{output_file}")
+                print(f"   Sending POST to: {self.base_url}/upload-video")
                 
-                return True
-            else:
-                print(f"❌ Failed: {result.get('error', 'Unknown error')}")
-                return False
+                async with self.session.post(f"{self.base_url}/upload-video", data=data) as response:
+                    print(f"   Response status: {response.status}")
+                    
+                    result = await response.json()
+                    
+                    if response.status == 200 and result.get('status') == 'success':
+                        self.unique_phrase = result['unique_phrase']
+                        print(f"✅ Upload successful!")
+                        print(f"   - Unique phrase: {self.unique_phrase}")
+                        print(f"   - Filename: {result['filename']}")
+                        return True
+                    else:
+                        print(f"❌ Upload failed:")
+                        print(f"   - Response: {json.dumps(result, indent=2)}")
+                        return False
+                        
+        except aiohttp.ClientError as e:
+            print(f"❌ Client error: {type(e).__name__}: {str(e)}")
+            return False
+        except Exception as e:
+            print(f"❌ Exception during upload: {type(e).__name__}: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    async def test_progress_tracking(self):
+        """Test 2: Progress tracking"""
+        print("\n🧪 TEST 2: Progress Tracking")
+        print("=" * 50)
+        
+        if not self.unique_phrase:
+            print("❌ No unique phrase available. Upload test must succeed first.")
+            return False
+            
+        try:
+            previous_percentage = -1
+            steps_seen = set()
+            start_time = time.time()
+            
+            while True:
+                async with self.session.get(f"{self.base_url}/progress/{self.unique_phrase}") as response:
+                    if response.status != 200:
+                        print(f"❌ Progress endpoint returned status {response.status}")
+                        return False
+                        
+                    progress_data = await response.json()
+                    
+                    status = progress_data['status']
+                    progress = progress_data['progress']
+                    current_step = progress['current_step']
+                    percentage = progress['percentage']
+                    
+                    # Track new steps
+                    if current_step not in steps_seen:
+                        steps_seen.add(current_step)
+                        print(f"\n📍 New step: {current_step}")
+                    
+                    # Update progress bar
+                    if percentage != previous_percentage:
+                        bar_length = 30
+                        filled = int(bar_length * percentage / 100)
+                        bar = '█' * filled + '░' * (bar_length - filled)
+                        print(f"\r   [{bar}] {percentage}% - {current_step}", end='')
+                        previous_percentage = percentage
+                    
+                    if status == 'completed':
+                        elapsed = time.time() - start_time
+                        print(f"\n✅ Processing completed in {elapsed:.1f} seconds!")
+                        print(f"   - Steps completed: {', '.join(progress['steps_completed'])}")
+                        print(f"   - Segments created: {progress_data['segment_count']}")
+                        return True
+                        
+                    elif status == 'failed':
+                        print(f"\n❌ Processing failed: {progress_data['error']}")
+                        return False
+                    
+                    # Timeout after 5 minutes
+                    if time.time() - start_time > 300:
+                        print("\n❌ Timeout: Processing took too long")
+                        return False
+                
+                await asyncio.sleep(1)
                 
         except Exception as e:
-            print(f"❌ Exception: {e}")
+            print(f"\n❌ Exception during progress tracking: {str(e)}")
             return False
     
-    async def test_adk_agent(self, video_path: Path):
-        """Test the ADK agent"""
-        print(f"\n{'='*60}")
-        print(f"🤖 ADK AGENT TEST: {video_path.name}")
-        print(f"{'='*60}")
+    async def test_segments_info(self):
+        """Test 3: Get segments information"""
+        print("\n🧪 TEST 3: Segments Information")
+        print("=" * 50)
         
-        start_time = time.time()
+        if not self.unique_phrase:
+            print("❌ No unique phrase available")
+            return False
+            
+        try:
+            async with self.session.get(f"{self.base_url}/segments/{self.unique_phrase}") as response:
+                if response.status != 200:
+                    print(f"❌ Segments endpoint returned status {response.status}")
+                    return False
+                    
+                segments_data = await response.json()
+                
+                print(f"✅ Retrieved segments information:")
+                print(f"   - Total segments: {segments_data['total_segments']}")
+                print(f"   - Status: {segments_data['status']}")
+                
+                if segments_data['total_segments'] > 0:
+                    print("\n   Segments:")
+                    total_size = 0
+                    for i, segment in enumerate(segments_data['segments']):
+                        print(f"   {i+1}. {segment['filename']}")
+                        print(f"      - Size: {segment['size_mb']} MB")
+                        print(f"      - Download URL: {segment['download_url']}")
+                        total_size += segment['size_mb']
+                    
+                    print(f"\n   Total size: {total_size:.2f} MB")
+                    return True
+                else:
+                    print("❌ No segments found")
+                    return False
+                    
+        except Exception as e:
+            print(f"❌ Exception getting segments info: {str(e)}")
+            return False
+    
+    async def test_download_segment(self, segment_index=0):
+        """Test 4: Download a segment"""
+        print("\n🧪 TEST 4: Download Segment")
+        print("=" * 50)
+        
+        if not self.unique_phrase:
+            print("❌ No unique phrase available")
+            return False
+            
+        try:
+            download_url = f"{self.base_url}/download-segment/{self.unique_phrase}/{segment_index}"
+            
+            async with self.session.get(download_url) as response:
+                if response.status != 200:
+                    print(f"❌ Download endpoint returned status {response.status}")
+                    return False
+                
+                # Get filename from headers
+                content_disposition = response.headers.get('content-disposition', '')
+                filename = content_disposition.split('filename=')[-1].strip('"') if 'filename=' in content_disposition else f"segment_{segment_index}.mp4"
+                
+                # Save to test_downloads directory
+                os.makedirs("test_downloads", exist_ok=True)
+                download_path = f"test_downloads/{self.unique_phrase}_{filename}"
+                
+                content = await response.read()
+                with open(download_path, 'wb') as f:
+                    f.write(content)
+                
+                file_size = len(content) / (1024 * 1024)  # MB
+                print(f"✅ Successfully downloaded segment {segment_index}:")
+                print(f"   - Filename: {filename}")
+                print(f"   - Size: {file_size:.2f} MB")
+                print(f"   - Saved to: {download_path}")
+                return True
+                
+        except Exception as e:
+            print(f"❌ Exception downloading segment: {str(e)}")
+            return False
+    
+    async def test_list_sessions(self):
+        """Test 5: List all sessions"""
+        print("\n🧪 TEST 5: List Sessions")
+        print("=" * 50)
         
         try:
-            response = await run_transcription_agent(str(video_path))
-            processing_time = time.time() - start_time
+            async with self.session.get(f"{self.base_url}/sessions") as response:
+                if response.status != 200:
+                    print(f"❌ Sessions endpoint returned status {response.status}")
+                    return False
+                    
+                sessions_data = await response.json()
+                
+                print(f"✅ Retrieved sessions list:")
+                print(f"   - Total sessions: {sessions_data['total_sessions']}")
+                
+                if sessions_data['total_sessions'] > 0:
+                    print("\n   Recent sessions:")
+                    for i, session in enumerate(sessions_data['sessions'][:5]):  # Show last 5
+                        print(f"   {i+1}. {session['unique_phrase']}")
+                        print(f"      - Status: {session['status']}")
+                        print(f"      - Created: {session['created_at']}")
+                        print(f"      - Segments: {session['segment_count']}")
+                
+                return True
+                
+        except Exception as e:
+            print(f"❌ Exception listing sessions: {str(e)}")
+            return False
+    
+    async def test_invalid_session(self):
+        """Test 6: Test invalid session handling"""
+        print("\n🧪 TEST 6: Invalid Session Handling")
+        print("=" * 50)
+        
+        fake_phrase = "invalid-phrase-9999"
+        
+        try:
+            # Test progress endpoint
+            async with self.session.get(f"{self.base_url}/progress/{fake_phrase}") as response:
+                if response.status == 404:
+                    print("✅ Progress endpoint correctly returned 404 for invalid session")
+                else:
+                    print(f"❌ Progress endpoint returned unexpected status: {response.status}")
+                    return False
             
-            print(f"⏱️  Agent response time: {processing_time:.2f} seconds")
-            print(f"📝 Agent response preview:")
-            print(f"   {response[:200]}...")
-            
-            # Save agent response
-            output_dir = "output"
-
-            output_file = f"agent_response_{video_path.stem}.txt"
-            with open(os.path.join(output_dir, output_file), 'w', encoding='utf-8') as f:
-                f.write(response)
-            print(f"💾 Agent response saved to: {output_dir}/{output_file}")
+            # Test segments endpoint
+            async with self.session.get(f"{self.base_url}/segments/{fake_phrase}") as response:
+                if response.status == 404:
+                    print("✅ Segments endpoint correctly returned 404 for invalid session")
+                else:
+                    print(f"❌ Segments endpoint returned unexpected status: {response.status}")
+                    return False
             
             return True
             
         except Exception as e:
-            print(f"❌ Agent test failed: {e}")
+            print(f"❌ Exception testing invalid session: {str(e)}")
             return False
     
-    async def run_comprehensive_test(self):
-        """Run all tests"""
-        print("🚀 COMPREHENSIVE TRANSCRIPTION AGENT TEST")
-        print("=" * 60)
+    async def run_all_tests(self):
+        """Run all tests in sequence"""
+        print("\n" + "="*60)
+        print("🚀 STARTING COMPREHENSIVE VIDEO PROCESSING TESTS")
+        print("="*60)
+        print(f"Server: {self.base_url}")
+        print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
-        # Check prerequisites
-        if not self.check_prerequisites():
-            return
+        results = {
+            "Upload Video": await self.test_upload_video(),
+            "Progress Tracking": await self.test_progress_tracking(),
+            "Segments Info": await self.test_segments_info(),
+            "Download Segment": await self.test_download_segment(),
+            "List Sessions": await self.test_list_sessions(),
+            "Invalid Session": await self.test_invalid_session()
+        }
         
-        # Find test videos
-        test_videos = self.find_test_videos()
-        if not test_videos:
-            print("\n⚠️  No test videos found!")
-            print("📝 Please add a video file to test with and run again.")
-            return
-        
-        print(f"\n🎯 Running tests with {len(test_videos)} video(s)...")
-        
-        # Test each video
-        for i, video_path in enumerate(test_videos, 1):
-            print(f"\n📹 Testing video {i}/{len(test_videos)}: {video_path.name}")
-            
-            # Test 1: Direct function
-            direct_success = await self.test_direct_function(video_path)
-            
-            # Test 2: ADK agent 
-            agent_success = await self.test_adk_agent(video_path)
-            
-            self.test_results.append({
-                'video': video_path.name,
-                'direct_function': direct_success,
-                'adk_agent': agent_success
-            })
-            
-            # Wait between tests to avoid rate limits
-            if i < len(test_videos):
-                print("\n⏳ Waiting 3 seconds before next test...")
-                await asyncio.sleep(3)
-        
-        # Print summary
-        self.print_test_summary()
-    
-    def print_test_summary(self):
-        """Print test summary"""
-        print(f"\n{'='*60}")
+        # Summary
+        print("\n" + "="*60)
         print("📊 TEST SUMMARY")
-        print(f"{'='*60}")
+        print("="*60)
         
-        total_tests = len(self.test_results) * 2
-        passed_tests = sum(
-            (1 if result['direct_function'] else 0) + 
-            (1 if result['adk_agent'] else 0)
-            for result in self.test_results
-        )
+        passed = sum(1 for result in results.values() if result)
+        total = len(results)
         
-        print(f"Total tests run: {total_tests}")
-        print(f"Tests passed: {passed_tests}")
-        print(f"Tests failed: {total_tests - passed_tests}")
-        print(f"Success rate: {(passed_tests/total_tests)*100:.1f}%")
+        for test_name, result in results.items():
+            status = "✅ PASSED" if result else "❌ FAILED"
+            print(f"{test_name:<20} {status}")
         
-        print(f"\nDetailed results:")
-        for result in self.test_results:
-            print(f"  📹 {result['video']}:")
-            print(f"    Direct function: {'✅' if result['direct_function'] else '❌'}")
-            print(f"    ADK agent: {'✅' if result['adk_agent'] else '❌'}")
+        print(f"\nTotal: {passed}/{total} tests passed ({passed/total*100:.0f}%)")
         
-        print(f"\n📁 Check current directory for output files:")
-        print(f"   - test_result_*.json (transcription results)")
-        print(f"   - agent_response_*.txt (agent responses)")
+        if self.unique_phrase:
+            print(f"\n💡 Your unique phrase for this session: {self.unique_phrase}")
+            print(f"   You can use this to check progress or download segments later.")
+        
+        return passed == total
 
 
-async def quick_test_with_manual_path():
-    """Quick test where user provides video path manually"""
-    print("🎬 Quick Manual Test")
-    print("=" * 40)
-    
-    video_path = "video/test.mp4"  # Default path, can be overridden by user input
-    
-    if not os.path.exists(video_path):
-        print("❌ File not found!")
-        return
-    
-    test_runner = TestRunner()
-    
-    if not test_runner.check_prerequisites():
-        return
-    
-    video_path = Path(video_path)
-    print(f"\n🚀 Testing with: {video_path.name}")
-    
-    # Test direct function
-    success = await test_runner.test_direct_function(video_path)
-    
-    if success:
-        print("\n✅ Test completed successfully!")
-    else:
-        print("\n❌ Test failed!")
-
-
-def main():
-    """Main entry point"""
-    print("Choose test mode:")
-    print("1. Automatic test (searches for videos)")
-    print("2. Manual test (you provide video path)")
-    
-    choice = input("Enter choice (1 or 2): ").strip()
-    
-    if choice == "1":
-        test_runner = TestRunner()
-        asyncio.run(test_runner.run_comprehensive_test())
-    elif choice == "2":
-        asyncio.run(quick_test_with_manual_path())
-    else:
-        print("Invalid choice!")
+async def main():
+    """Main test runner"""
+    try:
+        async with VideoProcessingTester() as tester:
+            success = await tester.run_all_tests()
+            
+            if success:
+                print("\n🎉 All tests passed successfully!")
+            else:
+                print("\n⚠️  Some tests failed. Check the output above for details.")
+                
+    except aiohttp.ClientError as e:
+        print(f"\n❌ Connection Error: {str(e)}")
+        print("Make sure the FastAPI server is running on http://localhost:8000")
+    except Exception as e:
+        print(f"\n❌ Unexpected Error: {str(e)}")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

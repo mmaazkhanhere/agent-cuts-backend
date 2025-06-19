@@ -13,12 +13,18 @@ from google.genai import types
 from .utils import add_audio_to_segments
 
 
-def video_segmentation_tool(json_data, output_dir="segments"):
+def video_segmentation_tool(json_data: str, output_dir: str = "segments"):
     """
     Agent tool that splits video into segments based on JSON data containing start/end times
     """
+    # Parse JSON string if needed
+    if isinstance(json_data, str):
+        data = json.loads(json_data)
+    else:
+        data = json_data
+        
     os.makedirs(output_dir, exist_ok=True)
-    video_path = json_data["video_path"]
+    video_path = data["video_path"]
     
     # Use absolute path to avoid permission issues
     if not os.path.isabs(video_path):
@@ -27,10 +33,20 @@ def video_segmentation_tool(json_data, output_dir="segments"):
     # Load video without audio first to avoid processing issues
     video = VideoFileClip(video_path, audio=False)
     
-    segments = json_data["ranked_segments"]["ranked_list"]
+    segments = data["ranked_segments"]["ranked_list"]
     for i, segment in enumerate(segments):
-        start = float(segment["start_time"])
-        end = float(segment["end_time"])
+        # Handle different segment data structures
+        if "segment" in segment:
+            # Nested structure from ranking
+            seg_data = segment["segment"]
+            start = float(seg_data.get("start_time", 0))
+            end = float(seg_data.get("end_time", 0))
+            topic = seg_data.get("topic", f"Segment_{i+1}")
+        else:
+            # Direct structure
+            start = float(segment.get("start_time", 0))
+            end = float(segment.get("end_time", 0))
+            topic = segment.get("topic", segment.get("text", f"Segment_{i+1}")[:30])
         
         # Handle segments that might exceed video duration
         if end > video.duration:
@@ -41,7 +57,7 @@ def video_segmentation_tool(json_data, output_dir="segments"):
             
         clip = video.subclipped(start, end)
         
-        topic = segment["topic"].replace(" ", "_").replace("/", "-")[:30]
+        topic = topic.replace(" ", "_").replace("/", "-")[:30]
         output_path = os.path.join(output_dir, f"seg_{i+1:02d}_{topic}.mp4")
         
         # Write without audio first (fixes the AttributeError)
@@ -83,7 +99,7 @@ runner = Runner(
 )
 
 
-async def run_video_segmentation_agent(json_data):
+async def run_video_segmentation_agent(json_data, output_dir: str = "segments"):
     """
     Run the ADK transcription agent
     
@@ -105,7 +121,7 @@ async def run_video_segmentation_agent(json_data):
     if not video_path:
         return json.dumps({"status": "error", "error": "Missing 'video_path' in JSON input"})
     
-    prompt = f"Segment this video: {video_path}"
+    prompt = f"Segment this video: {video_path} and save to {output_dir}"
     
     new_message_content = types.Content(
         role="user",
@@ -149,10 +165,8 @@ async def run_video_segmentation_agent(json_data):
     # Fallback: Run the transcription directly if agent didn't call tool
     print("[!] Agent didn't call tool, running transcription directly...")
     try:
-        with open(r"output\ranking_response.json", "r") as f:
-            data = json.load(f)
-    
-        video_segmentation_tool(data)
+        # Use the passed json_data directly
+        video_segmentation_tool(json_data, output_dir)
         return json.dumps({"status": "success", "message": "video segmented successfully"})
     except Exception as e:
         return json.dumps({"status": "error", "error": f"Direct transcription failed: {str(e)}"})

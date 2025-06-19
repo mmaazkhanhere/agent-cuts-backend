@@ -1,0 +1,88 @@
+{
+  "alert-hawk-7036": {
+    "unique_phrase": "alert-hawk-7036",
+    "video_path": "uploads/alert-hawk-7036\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "transcription",
+        "transcription_complete",
+        "segmentation",
+        "segmentation_complete",
+        "ranking",
+        "ranking_complete",
+        "video_segmentation",
+        "completed"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-19T14:43:24.187536",
+    "updated_at": "2025-06-19T14:43:32.357377",
+    "segment_paths": [],
+    "error": null
+  },
+  "calm-eagle-5955": {
+    "unique_phrase": "calm-eagle-5955",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\calm-eagle-5955\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "transcription",
+        "transcription_complete",
+        "segmentation",
+        "segmentation_complete",
+        "ranking",
+        "ranking_complete",
+        "video_segmentation",
+        "completed"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-19T14:47:12.756634",
+    "updated_at": "2025-06-19T14:48:49.594364",
+    "segment_paths": [
+      "segments/calm-eagle-5955\\seg_02_Vulnerability_&_Shame.mp4",
+      "segments/calm-eagle-5955\\seg_03_The_Core_of_Connection.mp4",
+      "segments/calm-eagle-5955\\seg_04_Storyteller_vs._Researcher.mp4",
+      "segments/calm-eagle-5955\\seg_05_Challenging_Academic_Beliefs.mp4",
+      "segments/calm-eagle-5955\\seg_06_Years_of_Research.mp4"
+    ],
+    "error": null
+  },
+  "crisp-cheetah-1075": {
+    "unique_phrase": "crisp-cheetah-1075",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\crisp-cheetah-1075\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "transcription",
+        "transcription_complete",
+        "segmentation",
+        "segmentation_complete",
+        "ranking",
+        "ranking_complete",
+        "video_segmentation",
+        "completed"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-19T14:50:03.244253",
+    "updated_at": "2025-06-19T14:51:43.163010",
+    "segment_paths": [
+      "segments/crisp-cheetah-1075\\seg_01_Unveiling_Shame.mp4",
+      "segments/crisp-cheetah-1075\\seg_02_The_Role_of_Vulnerability.mp4",
+      "segments/crisp-cheetah-1075\\seg_03_The_Importance_of_Connection.mp4",
+      "segments/crisp-cheetah-1075\\seg_04_The_Discomfort_of_Disconnectio.mp4",
+      "segments/crisp-cheetah-1075\\seg_05_The_Storyteller_vs._Researcher.mp4",
+      "segments/crisp-cheetah-1075\\seg_06_Challenging_Research_Paradigms.mp4",
+      "segments/crisp-cheetah-1075\\seg_07_Years_of_Research_on_Worthines.mp4"
+    ],
+    "error": null
+  }
+}
