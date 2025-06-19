@@ -1,149 +1,87 @@
-{'segments': [
-    {'text': "Tanya Cushman Reviewer's Name Reviewer's Name So, I'll start with this.", 'start_time': 0.0, 'end_time': 18.72
-    },
-    {'text': 'A couple of years ago, an event planner called me because I was going to do a speaking event.', 'start_time': 17.74, 'end_time': 22.72
-    },
-    {'text': "She called and she said, I'm really struggling with how to write about you on the little flyer.", 'start_time': 22.0, 'end_time': 27.9
-    },
-    {'text': "And I thought, well, what's the struggle?", 'start_time': 27.76, 'end_time': 29.54
-    },
-    {'text': "And she said, well, I saw you speak, and I'm going to call you a researcher, I think, but I'm afraid if I call you a researcher, no one will come because they'll think you're boring and irrelevant.", 'start_time': 29.2, 'end_time': 38.54
-    },
-    {'text': 'And I was like, okay.', 'start_time': 41.34, 'end_time': 42.4
-    },
-    {'text': "And she said, but the thing I liked about your talk is you're a storyteller, so I think what I'll do is just call you a storyteller.", 'start_time': 42.08, 'end_time': 48.96
-    },
-    {'text': "And, of course, the academic, insecure part of me was like, you're going to call me a what?", 'start_time': 50.12, 'end_time': 55.38
-    },
-    {'text': "And she said, I'm going to call you a storyteller.", 'start_time': 55.44, 'end_time': 57.74
-    },
-    {'text': 'and I was like, why not Magic Pixie?', 'start_time': 57.32, 'end_time': 62.78
-    },
-    {'text': "I was like, I don't, let me think about this for a second, and so I tried to call deep on my courage, and I thought, you know, I am a storyteller, I'm a qualitative researcher I collect stories that's what I do and maybe stories are just data with a soul you know and maybe I'm just a storyteller so I said you know what why don't you just say I'm a researcher storyteller and she went there's no such thing so I'm a researcher storyteller and I'm gonna talk to you today we're We're talking about expanding perception, and so I want to talk to you and tell some stories about a piece of my research that fundamentally expanded my perception and really actually changed the way that I live and love and work and parent.", 'start_time': 62.78, 'end_time': 110.60325
-    },
-    {'text': 'And this is where my story starts.', 'start_time': 110.22325, 'end_time': 112.58325
-    },
-    {'text': "When I was a young researcher, doctoral student, my first year I had a research professor who said to us, here's the thing, if you cannot measure it, it does not exist.", 'start_time': 112.72325, 'end_time': 124.00325
-    },
-    {'text': 'And I thought he was just sweet talking me.', 'start_time': 125.56325, 'end_time': 127.64325
-    },
-    {'text': 'I was like, really?', 'start_time': 126.66325, 'end_time': 128.90326
-    },
-    {'text': "And he's like, absolutely.", 'start_time': 128.46326, 'end_time': 130.88326
-    },
-    {'text': "So you have to understand that I have a bachelor's in social work, a master's in social work, and I was getting my PhD in social work.", 'start_time': 130.38326, 'end_time': 136.92325
-    },
-    {'text': "So my entire academic career was surrounded by people who kind of believed in the life's messy, love it, and I'm more the life's messy, clean it up, organize it, and put it into a bento box.", 'start_time': 136.48325, 'end_time': 152.3265
-    },
-    {'text': 'And so to think that I had found my way, to found a career that takes me, you know, really one of the big sayings in social work is lean into the discomfort of the work.', 'start_time': 155.1865, 'end_time': 165.6465
-    },
-    {'text': "And I'm like, you know, knock discomfort upside the head and move it over and get all A's.", 'start_time': 166.6065, 'end_time': 171.6265
-    },
-    {'text': 'That was my mantra.', 'start_time': 171.3265, 'end_time': 173.5265
-    },
-    {'text': 'So I was very excited about this.', 'start_time': 174.5265, 'end_time': 176.2865
-    },
-    {'text': 'And so I thought, you know what?', 'start_time': 176.3265, 'end_time': 177.8465
-    },
-    {'text': 'This is the career for me.', 'start_time': 178.1665, 'end_time': 179.6865
-    },
-    {'text': 'Because I am interested in some messy topics, but I want to be able to make them not messy.', 'start_time': 179.5065, 'end_time': 184.9265
-    },
-    {'text': 'I want to understand them.', 'start_time': 185.3865, 'end_time': 187.1865
-    },
-    {'text': 'I want to hack into these things that I know are important and lay the code out for everyone to see.', 'start_time': 186.74649, 'end_time': 192.7265
-    },
-    {'text': 'So where I started was with connection.', 'start_time': 193.1265, 'end_time': 195.24649
-    },
-    {'text': "because by the time you're a social worker for 10 years what you realize is that connection is why we're here it's what gives purpose and meaning to our lives this is this is what it's all about it doesn't matter whether you talk to people who work in social justice and mental health and abuse and neglect what we know is that connection the ability to feel connected is neurobiologically that's how we're wired it's why we're here.", 'start_time': 195.3065, 'end_time': 223.26976
-    },
-    {'text': "So I thought, you know what, I'm going to start with connection.", 'start_time': 223.04976, 'end_time': 226.08975
-    },
-    {'text': "Well you know that situation where you get an evaluation from your boss and she tells you 37 things that you do really awesome and one thing that you can't, you know, an opportunity for growth?", 'start_time': 226.74976, 'end_time': 238.04976
-    },
-    {'text': 'And all you can think about is that opportunity for growth, right?', 'start_time': 238.96976, 'end_time': 242.60976
-    },
-    {'text': 'Well, apparently this is the way my work went as well, because when you ask people about love, they tell you about heartbreak.', 'start_time': 242.80975, 'end_time': 250.52975
-    },
-    {'text': "When you ask people about belonging, they'll tell you their most excruciating experiences of being excluded.", 'start_time': 250.46976, 'end_time': 257.12976
-    },
-    {'text': 'And when you ask people about connection, the stories they told me were about disconnection.', 'start_time': 257.26974, 'end_time': 261.84976
-    },
-    {'text': 'So very quickly, really about six weeks into this research, I ran into this unnamed thing that absolutely unraveled connection.', 'start_time': 263.26974, 'end_time': 270.98975
-    },
-    {'text': "in a way that I didn't understand or had never seen.", 'start_time': 272.34976, 'end_time': 275.00977
-    },
-    {'text': 'And so I pulled back out of the research and thought, I need to figure out what this is.', 'start_time': 275.26974, 'end_time': 278.48975
-    },
-    {'text': 'And it turned out to be shame.', 'start_time': 279.40976, 'end_time': 281.42975
-    },
-    {'text': 'And shame is really easily understood as the fear of disconnection.', 'start_time': 283.34976, 'end_time': 286.54974
-    },
-    {'text': "Is there something about me that if other people know it or see it, that I won't understand", 'start_time': 287.34976, 'end_time': 293.70975
-    },
-    {'text': 'be worthy of connection.', 'start_time': 293.793, 'end_time': 295.653
-    },
-    {'text': "The things I can tell you about it, it's universal.", 'start_time': 295.653, 'end_time': 297.913
-    },
-    {'text': 'We all have it.', 'start_time': 297.913, 'end_time': 298.573
-    },
-    {'text': "The only people who don't experience shame have no capacity for human empathy or connection.", 'start_time': 298.573, 'end_time': 303.573
-    },
-    {'text': 'No one wants to talk about it, and the less you talk about it, the more you have it.', 'start_time': 303.573, 'end_time': 309.213
-    },
-    {'text': "What underpinned this shame, this I'm not good enough, which we all know that feeling.", 'start_time': 309.213, 'end_time': 315.613
-    },
-    {'text': "I'm not blank enough.", 'start_time': 315.613, 'end_time': 316.633
-    },
-    {'text': "I'm not thin enough, rich enough, beautiful enough, smart enough, promoted enough.", 'start_time': 316.633, 'end_time': 320.313
-    },
-    {'text': 'The thing that underpinned this was excruciating vulnerability.', 'start_time': 321.533, 'end_time': 325.713
-    },
-    {'text': 'This idea of in order for connection to happen, we have to allow ourselves to be seen, really seen.', 'start_time': 327.01300000000003, 'end_time': 335.01300000000003
-    },
-    {'text': 'And you know how I feel about vulnerability.', 'start_time': 336.233, 'end_time': 337.753
-    },
-    {'text': 'I hate vulnerability.', 'start_time': 337.993, 'end_time': 339.173
-    },
-    {'text': 'And so I thought this is my chance to beat it back with my measuring stick.', 'start_time': 339.053, 'end_time': 343.793
-    },
-    {'text': "I'm going in.", 'start_time': 343.833, 'end_time': 344.573
-    },
-    {'text': "I'm going to figure this stuff out.", 'start_time': 345.413, 'end_time': 347.053
-    },
-    {'text': "I'm going to spend a year, I'm going to totally deconstruct shame, I'm going to understand how vulnerability works, and I'm going to outsmart it.", 'start_time': 346.573, 'end_time': 353.096
-    },
-    {'text': 'So I was ready, and I was really excited.', 'start_time': 354.75600000000003, 'end_time': 356.596
-    },
-    {'text': "As you know, it's not going to turn out well.", 'start_time': 360.396, 'end_time': 361.576
-    },
-    {'text': 'You know this.', 'start_time': 365.036, 'end_time': 365.716
-    },
-    {'text': "So I could tell you a lot about shame, but I'd have to borrow everyone else's time.", 'start_time': 366.716004, 'end_time': 369.876
-    },
-    {'text': "But here's what I can tell you that it boils down to.", 'start_time': 370.636, 'end_time': 372.576
-    },
-    {'text': "And this may be one of the most important things that I've ever learned in the decade of doing this research.", 'start_time': 373.496, 'end_time': 377.55600000000004
-    },
-    {'text': 'My one year turned into six years, thousands of stories, hundreds of long interviews, focus groups.', 'start_time': 380.196, 'end_time': 389.116
-    },
-    {'text': 'At one point, people were sending me journal pages and sending me their stories, thousands of pieces of data, and six years.', 'start_time': 389.096, 'end_time': 397.536
-    },
-    {'text': 'And I kind of got a handle on it.', 'start_time': 397.436005, 'end_time': 399.276
-    },
-    {'text': 'I kind of understood this is what shame is, this is how it works.', 'start_time': 398.916, 'end_time': 402.196
-    },
-    {'text': 'I wrote a book.', 'start_time': 403.536, 'end_time': 404.136
-    },
-    {'text': 'I published a theory.', 'start_time': 404.836, 'end_time': 406.216004
-    },
-    {'text': 'But something was not okay.', 'start_time': 406.996, 'end_time': 408.336
-    },
-    {'text': 'And what it was is that if I roughly took the people I interviewed and divided them into people,', 'start_time': 409.936005, 'end_time': 415.396
-    },
-    {'text': 'who really have a sense of worthiness.', 'start_time': 417.359, 'end_time': 420.219
-    },
-    {'text': "That's what this comes down to, a sense of worthiness.", 'start_time': 420.339, 'end_time': 422.039
-    }
-  ], 'status': 'success'
+{
+  "happy-raven-5246": {
+    "unique_phrase": "happy-raven-5246",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\happy-raven-5246\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "initializing",
+      "steps_completed": [
+        "upload",
+        "initializing"
+      ],
+      "percentage": 5
+    },
+    "created_at": "2025-06-20T01:20:10.239212",
+    "updated_at": "2025-06-20T01:20:10.249538",
+    "segment_paths": [],
+    "error": "Exception: This event loop is already running"
+  },
+  "gentle-fox-2484": {
+    "unique_phrase": "gentle-fox-2484",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\gentle-fox-2484\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "initializing",
+      "steps_completed": [
+        "upload",
+        "initializing"
+      ],
+      "percentage": 5
+    },
+    "created_at": "2025-06-20T01:30:01.329317",
+    "updated_at": "2025-06-20T01:30:01.335519",
+    "segment_paths": [],
+    "error": "Exception: This event loop is already running"
+  },
+  "crisp-lightning-3071": {
+    "unique_phrase": "crisp-lightning-3071",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\crisp-lightning-3071\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "initializing",
+      "steps_completed": [
+        "upload",
+        "initializing"
+      ],
+      "percentage": 5
+    },
+    "created_at": "2025-06-20T02:02:28.378728",
+    "updated_at": "2025-06-20T02:04:05.332376",
+    "segment_paths": [],
+    "error": "'start_time'"
+  },
+  "brave-tornado-9421": {
+    "unique_phrase": "brave-tornado-9421",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\brave-tornado-9421\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "initializing",
+      "steps_completed": [
+        "upload",
+        "initializing"
+      ],
+      "percentage": 5
+    },
+    "created_at": "2025-06-20T02:09:52.912344",
+    "updated_at": "2025-06-20T02:11:53.808905",
+    "segment_paths": [],
+    "error": "'start_time'"
+  },
+  "eager-fox-3284": {
+    "unique_phrase": "eager-fox-3284",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\eager-fox-3284\\test.mp4",
+    "status": "processing",
+    "progress": {
+      "current_step": "initializing",
+      "steps_completed": [
+        "upload",
+        "initializing"
+      ],
+      "percentage": 5
+    },
+    "created_at": "2025-06-20T02:13:59.508955",
+    "updated_at": "2025-06-20T02:13:59.517301",
+    "segment_paths": [],
+    "error": null
+  }
 }

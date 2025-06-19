@@ -4,7 +4,7 @@ Following the ADK pattern from https://github.com/google/adk-samples
 """
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
-from agent_cuts_runner import process_video_with_agent_cuts
+from agent_cuts_runner import process_video_with_agent_cuts_async
 from utils.session_manager import session_manager
 from utils.phrase_generator import generate_unique_phrase
 
@@ -69,7 +69,7 @@ async def process_video_background(unique_phrase: str, video_path: str):
         os.makedirs(output_dir, exist_ok=True)
         
         # Process video using agent_cuts
-        result = await process_video_with_agent_cuts(
+        result = await process_video_with_agent_cuts_async(
             video_path=video_path,
             output_dir=output_dir,
             user_id=unique_phrase,

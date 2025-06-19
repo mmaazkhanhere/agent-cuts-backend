@@ -9,7 +9,6 @@ from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT
 from .utils import add_audio_to_segments
 
 load_dotenv()
-
 def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segments") -> Dict[str, Any]:
     """
     Agent tool that splits video into segments based on JSON data containing start/end times
@@ -18,7 +17,7 @@ def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segmen
         json_data: A dictionary containing:
             - video_path: Path to the input video file
             - ranked_segments: Dictionary with a "ranked_list" key containing segments 
-              with "start_time", "end_time", and "topic" fields
+              with nested "segment" objects that have "start_time", "end_time", and "topic" fields
         output_dir: Directory to save the segmented video files
         
     Returns:
@@ -38,46 +37,64 @@ def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segmen
     segments = json_data["ranked_segments"]["ranked_list"]
     created_segments = []
     
-    for i, segment in enumerate(segments):
-        start = float(segment["start_time"])
-        end = float(segment["end_time"])
-        
-        # Handle segments that might exceed video duration
-        if end > video.duration:
-            end = video.duration
-        if start > video.duration:
-            print(f"Skipping segment {i+1} (starts after video ends)")
-            continue
+    for i, segment_data in enumerate(segments):
+        try:
+            # Handle nested segment structure
+            if "segment" in segment_data:
+                segment = segment_data["segment"]
+            else:
+                segment = segment_data
             
-        clip = video.subclipped(start, end)
+            # Extract start and end times
+            start = float(segment["start_time"])
+            end = float(segment["end_time"])
+            
+            # Handle segments that might exceed video duration
+            if end > video.duration:
+                end = video.duration
+            if start > video.duration:
+                print(f"Skipping segment {i+1} (starts after video ends)")
+                continue
+                
+            clip = video.subclipped(start, end)
+            
+            # Get topic with fallback options
+            topic = segment.get("topic", f"Segment_{i+1}")
+            safe_topic = topic.replace(" ", "_").replace("/", "-")[:30]
+            output_path = os.path.join(output_dir, f"seg_{i+1:02d}_{safe_topic}.mp4")
+            
+            # Write without audio first (fixes the AttributeError)
+            clip.write_videofile(
+                output_path,
+                codec="libx264",
+                audio=False,  # Disable audio to avoid the error
+                logger=None,
+                threads=4  # Helps with processing speed
+            )
+            
+            created_segments.append({
+                "index": i+1,
+                "topic": topic,
+                "start_time": start,
+                "end_time": end,
+                "output_path": output_path,
+                "duration": end - start
+            })
+            
+            print(f"Created video segment: {output_path}")
+            clip.close()
         
-        topic = segment["topic"].replace(" ", "_").replace("/", "-")[:30]
-        output_path = os.path.join(output_dir, f"seg_{i+1:02d}_{topic}.mp4")
-        
-        # Write without audio first (fixes the AttributeError)
-        clip.write_videofile(
-            output_path,
-            codec="libx264",
-            audio=False,  # Disable audio to avoid the error
-            logger=None,
-            threads=4  # Helps with processing speed
-        )
-        
-        created_segments.append({
-            "index": i+1,
-            "topic": segment["topic"],
-            "start_time": start,
-            "end_time": end,
-            "output_path": output_path
-        })
-        
-        print(f"Created video segment: {output_path}")
-        clip.close()
+        except Exception as e:
+            print(f"Error processing segment {i+1}: {str(e)}")
+            continue
     
     video.close()
     
     # Now add audio separately using FFmpeg
-    add_audio_to_segments(video_path, output_dir)
+    try:
+        add_audio_to_segments(video_path, output_dir)
+    except Exception as e:
+        print(f"Warning: Could not add audio to segments: {str(e)}")
     
     return {
         "status": "success",

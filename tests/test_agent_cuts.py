@@ -11,7 +11,7 @@ import json
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from agent_cuts_runner import process_video_with_agent_cuts
+from agent_cuts_runner import process_video_with_agent_cuts_async
 
 
 async def test_agent_cuts_direct():
@@ -31,7 +31,7 @@ async def test_agent_cuts_direct():
     try:
         # Process video
         print("\nStarting agent_cuts processing...")
-        result = await process_video_with_agent_cuts(
+        result = await process_video_with_agent_cuts_async(
             video_path=video_path,
             output_dir="test_segments",
             user_id="test_user",
