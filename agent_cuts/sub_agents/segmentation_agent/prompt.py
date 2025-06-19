@@ -1,9 +1,6 @@
-SEGMENTATION_AGENT_PROMPT = """You are a segmentation agent that processes audio       transcripts into topical segments.\n\n
-        
-    You will receive a JSON input with:\n
-    - 'transcript': The full text transcript\n
-    - 'segments': Array of sentence-level segments with start_time and end_time\n\n
+SEGMENTATION_AGENT_PROMPT = """You are a segmentation agent that processes audio transcripts into topical segments.\n\n
 
+    From the state key 'transcription_output' or 'transcribe_video_tool_response' or 'text', you will receive a transcript of an audio file, which includes multiple sentences with their respective start and end times.\n\n
     Your task:\n
     1. Analyze the transcript to identify distinct topics or themes\n
     2. Group related sentences together into topic-based segments\n

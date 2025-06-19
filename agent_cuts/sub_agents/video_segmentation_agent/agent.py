@@ -1,4 +1,5 @@
 import os
+from typing import Dict, Any
 from dotenv import load_dotenv
 from moviepy import VideoFileClip
 
@@ -9,10 +10,21 @@ from .utils import add_audio_to_segments
 
 load_dotenv()
 
-def video_segmentation_tool(json_data, output_dir="segments"):
+def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segments") -> Dict[str, Any]:
     """
     Agent tool that splits video into segments based on JSON data containing start/end times
+    
+    Args:
+        json_data: A dictionary containing:
+            - video_path: Path to the input video file
+            - ranked_segments: Dictionary with a "ranked_list" key containing segments 
+              with "start_time", "end_time", and "topic" fields
+        output_dir: Directory to save the segmented video files
+        
+    Returns:
+        A dictionary containing information about the created segments
     """
+    print("[*] Video segmentation tool called with PARAMS:", json_data, "output_dir:", output_dir)
     os.makedirs(output_dir, exist_ok=True)
     video_path = json_data["video_path"]
     
@@ -24,6 +36,8 @@ def video_segmentation_tool(json_data, output_dir="segments"):
     video = VideoFileClip(video_path, audio=False)
     
     segments = json_data["ranked_segments"]["ranked_list"]
+    created_segments = []
+    
     for i, segment in enumerate(segments):
         start = float(segment["start_time"])
         end = float(segment["end_time"])
@@ -49,6 +63,14 @@ def video_segmentation_tool(json_data, output_dir="segments"):
             threads=4  # Helps with processing speed
         )
         
+        created_segments.append({
+            "index": i+1,
+            "topic": segment["topic"],
+            "start_time": start,
+            "end_time": end,
+            "output_path": output_path
+        })
+        
         print(f"Created video segment: {output_path}")
         clip.close()
     
@@ -56,6 +78,13 @@ def video_segmentation_tool(json_data, output_dir="segments"):
     
     # Now add audio separately using FFmpeg
     add_audio_to_segments(video_path, output_dir)
+    
+    return {
+        "status": "success",
+        "segments_created": len(created_segments),
+        "segment_details": created_segments,
+        "output_directory": os.path.abspath(output_dir)
+    }
 
 
 video_segmentation_agent = Agent(
@@ -65,4 +94,3 @@ video_segmentation_agent = Agent(
     instruction=VIDEO_SEGMENTATION_AGENT_PROMPT,
     tools=[video_segmentation_tool],
 )
-

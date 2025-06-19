@@ -19,3 +19,5 @@ agent_cut = SequentialAgent(
         copywrite_agent
     ]
 )
+
+root_agent = agent_cut

@@ -31,16 +31,13 @@ class TranscriptionEngine:
             print(f"[*] Starting transcription: {os.path.basename(video_path)}")
             
             # Step 1: Extract audio
-            print("[*] Extracting audio...")
             audio_path = self.audio_processor.extract_audio_from_video(video_path)
             
             # Step 2: Chunk audio
-            print("[*] Chunking audio...")
             chunks = self.audio_processor.chunk_audio_intelligently(audio_path)
             print(f"Created {len(chunks)} chunks")
             
             # Step 3: Transcribe chunks in parallel
-            print("[*] Transcribing chunks...")
             tasks = []
             for chunk in chunks:
                 task = self.groq_client.transcribe_audio_file(
@@ -61,8 +58,6 @@ class TranscriptionEngine:
             # Step 6: Cleanup
             temp_files = [audio_path] + [chunk.file_path for chunk in chunks]
             self.audio_processor.cleanup_temp_files(temp_files)
-            
-            print("[+] Transcription completed!")
             return transcription_result
             
         except Exception as e:

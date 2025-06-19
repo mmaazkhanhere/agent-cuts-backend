@@ -1,7 +1,16 @@
 # Agent Cuts Backend API Documentation
 
 ## Overview
-ClipGenius Transcription API v2.0 - A video processing pipeline that automatically transcribes, segments, ranks, and cuts videos into meaningful clips.
+ClipGenius Agent Cuts API v3.0 - A video processing pipeline using Google ADK Sequential Agents that automatically transcribes, segments, ranks, cuts videos, and generates copywriting for viral content.
+
+## Architecture
+This API uses the ADK (Agent Development Kit) pattern with a sequential agent pipeline:
+- **agent_cuts**: Main sequential agent that coordinates sub-agents
+  - **transcription_agent**: Extracts and transcribes audio
+  - **segmentation_agent**: Identifies topic boundaries
+  - **ranking_agent**: Scores segments for viral potential
+  - **video_segmentation_agent**: Cuts video into clips
+  - **copywriter_agent**: Generates engaging copy for each segment
 
 ## Base URL
 ```
@@ -18,12 +27,14 @@ Returns basic API information.
 **Response:**
 ```json
 {
-  "message": "ClipGenius Transcription API v2.0",
+  "message": "ClipGenius Agent Cuts API v3.0",
+  "description": "Video processing using ADK sequential agents",
   "features": [
-    "Video transcription with sentence-level timestamps",
-    "Intelligent audio chunking",
-    "Parallel processing",
-    "Multiple output formats"
+    "Video transcription with timestamps",
+    "Intelligent content segmentation",
+    "Viral potential ranking",
+    "Automatic video cutting",
+    "AI copywriting for each segment"
   ]
 }
 ```
@@ -35,12 +46,19 @@ Detailed health check with API status.
 ```json
 {
   "status": "healthy",
-  "version": "2.0",
+  "version": "3.0",
   "api_keys": {
     "groq_configured": true,
     "google_configured": true
   },
-  "endpoints": {...}
+  "agent": "agent_cuts (ADK Sequential Agent)",
+  "endpoints": {
+    "/upload-video": "Upload video for async processing",
+    "/progress/{unique_phrase}": "Check processing progress",
+    "/segments/{unique_phrase}": "Get segment information",
+    "/download-segment/{unique_phrase}/{index}": "Download segment",
+    "/sessions": "List all sessions"
+  }
 }
 ```
 

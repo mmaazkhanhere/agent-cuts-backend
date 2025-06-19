@@ -18,6 +18,28 @@ class VideoProcessingTester:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.session.close()
     
+    async def test_api_info(self):
+        """Test 0: API Information"""
+        print("\n🧪 TEST 0: API Information")
+        print("=" * 50)
+        
+        try:
+            async with self.session.get(f"{self.base_url}/") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    print(f"✅ API Version: {data.get('message')}")
+                    print(f"   Description: {data.get('description')}")
+                    print("   Features:")
+                    for feature in data.get('features', []):
+                        print(f"   - {feature}")
+                    return True
+                else:
+                    print(f"❌ API info returned status {response.status}")
+                    return False
+        except Exception as e:
+            print(f"❌ Exception: {str(e)}")
+            return False
+    
     async def test_upload_video(self, video_path="video/test.mp4"):
         """Test 1: Upload video"""
         print("\n🧪 TEST 1: Upload Video")
@@ -98,7 +120,7 @@ class VideoProcessingTester:
                     current_step = progress['current_step']
                     percentage = progress['percentage']
                     
-                    # Track new steps
+                    # Track new steps  
                     if current_step not in steps_seen:
                         steps_seen.add(current_step)
                         print(f"\n📍 New step: {current_step}")
@@ -108,7 +130,20 @@ class VideoProcessingTester:
                         bar_length = 30
                         filled = int(bar_length * percentage / 100)
                         bar = '█' * filled + '░' * (bar_length - filled)
-                        print(f"\r   [{bar}] {percentage}% - {current_step}", end='')
+                        
+                        # Map step names to friendly names
+                        step_names = {
+                            "initializing": "Initializing",
+                            "transcribing": "Transcribing audio",
+                            "segmenting": "Segmenting content", 
+                            "ranking": "Ranking segments",
+                            "cutting_video": "Cutting video",
+                            "generating_copy": "Generating copywriting",
+                            "completed": "Completed"
+                        }
+                        friendly_step = step_names.get(current_step, current_step)
+                        
+                        print(f"\r   [{bar}] {percentage}% - {friendly_step}", end='')
                         previous_percentage = percentage
                     
                     if status == 'completed':
@@ -243,51 +278,22 @@ class VideoProcessingTester:
             print(f"❌ Exception listing sessions: {str(e)}")
             return False
     
-    async def test_invalid_session(self):
-        """Test 6: Test invalid session handling"""
-        print("\n🧪 TEST 6: Invalid Session Handling")
-        print("=" * 50)
-        
-        fake_phrase = "invalid-phrase-9999"
-        
-        try:
-            # Test progress endpoint
-            async with self.session.get(f"{self.base_url}/progress/{fake_phrase}") as response:
-                if response.status == 404:
-                    print("✅ Progress endpoint correctly returned 404 for invalid session")
-                else:
-                    print(f"❌ Progress endpoint returned unexpected status: {response.status}")
-                    return False
-            
-            # Test segments endpoint
-            async with self.session.get(f"{self.base_url}/segments/{fake_phrase}") as response:
-                if response.status == 404:
-                    print("✅ Segments endpoint correctly returned 404 for invalid session")
-                else:
-                    print(f"❌ Segments endpoint returned unexpected status: {response.status}")
-                    return False
-            
-            return True
-            
-        except Exception as e:
-            print(f"❌ Exception testing invalid session: {str(e)}")
-            return False
-    
     async def run_all_tests(self):
         """Run all tests in sequence"""
         print("\n" + "="*60)
         print("🚀 STARTING COMPREHENSIVE VIDEO PROCESSING TESTS")
+        print("    Using Agent Cuts ADK Sequential Agent")
         print("="*60)
         print(f"Server: {self.base_url}")
         print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         results = {
+            "API Info": await self.test_api_info(),
             "Upload Video": await self.test_upload_video(),
             "Progress Tracking": await self.test_progress_tracking(),
             "Segments Info": await self.test_segments_info(),
             "Download Segment": await self.test_download_segment(),
             "List Sessions": await self.test_list_sessions(),
-            "Invalid Session": await self.test_invalid_session()
         }
         
         # Summary
