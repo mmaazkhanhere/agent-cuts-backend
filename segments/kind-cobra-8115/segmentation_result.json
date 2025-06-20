@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "segments_created": 7,
+  "segment_details": [
+    {
+      "index": 1,
+      "topic": "The Importance of Connection",
+      "start_time": 193.1265,
+      "end_time": 226.08975,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_01_The_Importance_of_Connection.mp4",
+      "duration": 32.963250000000016
+    },
+    {
+      "index": 2,
+      "topic": "Unraveling Shame",
+      "start_time": 279.40976,
+      "end_time": 353.096,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_02_Unraveling_Shame.mp4",
+      "duration": 73.68624
+    },
+    {
+      "index": 3,
+      "topic": "The Disconnection Discovery",
+      "start_time": 226.74976,
+      "end_time": 278.48975,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_03_The_Disconnection_Discovery.mp4",
+      "duration": 51.739990000000006
+    },
+    {
+      "index": 4,
+      "topic": "Six Years of Research",
+      "start_time": 354.75600000000003,
+      "end_time": 421.74,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_04_Six_Years_of_Research.mp4",
+      "duration": 66.98399999999998
+    },
+    {
+      "index": 6,
+      "topic": "Social Work Background",
+      "start_time": 130.38326,
+      "end_time": 192.7265,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_06_Social_Work_Background.mp4",
+      "duration": 62.34323999999998
+    },
+    {
+      "index": 7,
+      "topic": "The Professor's Words",
+      "start_time": 110.22325,
+      "end_time": 130.88326,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_07_The_Professor's_Words.mp4",
+      "duration": 20.660010000000014
+    },
+    {
+      "index": 8,
+      "topic": "Introduction",
+      "start_time": 0.0,
+      "end_time": 18.72,
+      "output_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_08_Introduction.mp4",
+      "duration": 18.72
+    }
+  ],
+  "output_directory": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115"
+}

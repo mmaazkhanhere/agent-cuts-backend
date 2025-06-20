@@ -1,87 +1,28 @@
 {
-  "happy-raven-5246": {
-    "unique_phrase": "happy-raven-5246",
-    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\happy-raven-5246\\test.mp4",
-    "status": "failed",
+  "kind-cobra-8115": {
+    "unique_phrase": "kind-cobra-8115",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\kind-cobra-8115\\test.mp4",
+    "status": "completed",
     "progress": {
-      "current_step": "initializing",
+      "current_step": "completed",
       "steps_completed": [
         "upload",
-        "initializing"
+        "initializing",
+        "completed"
       ],
-      "percentage": 5
+      "percentage": 100
     },
-    "created_at": "2025-06-20T01:20:10.239212",
-    "updated_at": "2025-06-20T01:20:10.249538",
-    "segment_paths": [],
-    "error": "Exception: This event loop is already running"
-  },
-  "gentle-fox-2484": {
-    "unique_phrase": "gentle-fox-2484",
-    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\gentle-fox-2484\\test.mp4",
-    "status": "failed",
-    "progress": {
-      "current_step": "initializing",
-      "steps_completed": [
-        "upload",
-        "initializing"
-      ],
-      "percentage": 5
-    },
-    "created_at": "2025-06-20T01:30:01.329317",
-    "updated_at": "2025-06-20T01:30:01.335519",
-    "segment_paths": [],
-    "error": "Exception: This event loop is already running"
-  },
-  "crisp-lightning-3071": {
-    "unique_phrase": "crisp-lightning-3071",
-    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\crisp-lightning-3071\\test.mp4",
-    "status": "failed",
-    "progress": {
-      "current_step": "initializing",
-      "steps_completed": [
-        "upload",
-        "initializing"
-      ],
-      "percentage": 5
-    },
-    "created_at": "2025-06-20T02:02:28.378728",
-    "updated_at": "2025-06-20T02:04:05.332376",
-    "segment_paths": [],
-    "error": "'start_time'"
-  },
-  "brave-tornado-9421": {
-    "unique_phrase": "brave-tornado-9421",
-    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\brave-tornado-9421\\test.mp4",
-    "status": "failed",
-    "progress": {
-      "current_step": "initializing",
-      "steps_completed": [
-        "upload",
-        "initializing"
-      ],
-      "percentage": 5
-    },
-    "created_at": "2025-06-20T02:09:52.912344",
-    "updated_at": "2025-06-20T02:11:53.808905",
-    "segment_paths": [],
-    "error": "'start_time'"
-  },
-  "eager-fox-3284": {
-    "unique_phrase": "eager-fox-3284",
-    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\eager-fox-3284\\test.mp4",
-    "status": "processing",
-    "progress": {
-      "current_step": "initializing",
-      "steps_completed": [
-        "upload",
-        "initializing"
-      ],
-      "percentage": 5
-    },
-    "created_at": "2025-06-20T02:13:59.508955",
-    "updated_at": "2025-06-20T02:13:59.517301",
-    "segment_paths": [],
+    "created_at": "2025-06-20T17:17:51.105925",
+    "updated_at": "2025-06-20T17:20:42.397499",
+    "segment_paths": [
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_01_The_Importance_of_Connection.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_02_Unraveling_Shame.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_03_The_Disconnection_Discovery.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_04_Six_Years_of_Research.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_06_Social_Work_Background.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_07_The_Professor's_Words.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\kind-cobra-8115\\seg_08_Introduction.mp4"
+    ],
     "error": null
   }
 }

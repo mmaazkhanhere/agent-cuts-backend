@@ -9,7 +9,7 @@ from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT
 from .utils import add_audio_to_segments
 
 load_dotenv()
-def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segments") -> Dict[str, Any]:
+def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Agent tool that splits video into segments based on JSON data containing start/end times
     
@@ -18,14 +18,60 @@ def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segmen
             - video_path: Path to the input video file
             - ranked_segments: Dictionary with a "ranked_list" key containing segments 
               with nested "segment" objects that have "start_time", "end_time", and "topic" fields
-        output_dir: Directory to save the segmented video files
-        
+            - output_dir: Directory to save the segmented video files
     Returns:
         A dictionary containing information about the created segments
     """
+    output_dir = "segments"
+
+    if "output_dir" in json_data:
+        output_dir = json_data["output_dir"]
+    
     print("[*] Video segmentation tool called with PARAMS:", json_data, "output_dir:", output_dir)
+    
+    # Use a file-based tracking system instead of context
+    # since context access is problematic
+    session_id = json_data.get("session_id", "default_session")
+    video_path = json_data.get("video_path", "unknown_video")
+    video_basename = os.path.basename(video_path)
+    
+    # Create a unique tracking file for this job
+    tracking_dir = os.path.join(os.path.dirname(output_dir), ".tracking")
+    os.makedirs(tracking_dir, exist_ok=True)
+    tracking_file = os.path.join(tracking_dir, f"{session_id}_{video_basename}.lock")
+    
+    # Check if we've already processed this video
+    if os.path.exists(tracking_file):
+        try:
+            with open(tracking_file, 'r') as f:
+                saved_output_dir = f.read().strip()
+                
+            # If we already segmented this video to this output directory, return cached info
+            if saved_output_dir == output_dir:
+                print(f"[INFO] Video {video_basename} already segmented to {output_dir}")
+                
+                # Try to read result file if it exists
+                result_file = os.path.join(output_dir, "segmentation_result.json")
+                if os.path.exists(result_file):
+                    try:
+                        import json
+                        with open(result_file, 'r') as f:
+                            cached_result = json.load(f)
+                            return cached_result
+                    except:
+                        pass
+                        
+                # If we can't find the detailed results, return basic info
+                return {
+                    "status": "already_processed",
+                    "message": f"Video has already been segmented to {output_dir}",
+                    "output_directory": os.path.abspath(output_dir)
+                }
+        except:
+            # If there's an error reading the tracking file, proceed with processing
+            pass
+    
     os.makedirs(output_dir, exist_ok=True)
-    video_path = json_data["video_path"]
     
     # Use absolute path to avoid permission issues
     if not os.path.isabs(video_path):
@@ -96,13 +142,31 @@ def video_segmentation_tool(json_data: Dict[str, Any], output_dir: str = "segmen
     except Exception as e:
         print(f"Warning: Could not add audio to segments: {str(e)}")
     
-    return {
+    # Save the result
+    result = {
         "status": "success",
         "segments_created": len(created_segments),
         "segment_details": created_segments,
         "output_directory": os.path.abspath(output_dir)
     }
-
+    
+    # Save result to a file for future reference
+    try:
+        import json
+        result_file = os.path.join(output_dir, "segmentation_result.json")
+        with open(result_file, 'w') as f:
+            json.dump(result, f, indent=2)
+    except Exception as e:
+        print(f"Warning: Could not save result file: {str(e)}")
+    
+    # Mark this video as processed by creating the tracking file
+    try:
+        with open(tracking_file, 'w') as f:
+            f.write(output_dir)
+    except Exception as e:
+        print(f"Warning: Could not create tracking file: {str(e)}")
+    
+    return result
 
 video_segmentation_agent = Agent(
     name="video_segmentation_agent",
