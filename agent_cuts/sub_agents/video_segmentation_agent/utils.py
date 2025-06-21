@@ -1,40 +1,49 @@
 import os
 import subprocess
+import subprocess
+from typing import Dict, Any
 
-def add_audio_to_segments(original_video, segments_dir):
-    """Adds audio to segments using FFmpeg to work around MoviePy issues"""
-    temp_dir = os.path.join(segments_dir, "temp")
-    os.makedirs(temp_dir, exist_ok=True)
-    
-    # Process each segment
-    for filename in os.listdir(segments_dir):
-        if filename.endswith(".mp4") and filename.startswith("seg_"):
-            input_path = os.path.join(segments_dir, filename)
-            output_path = os.path.join(temp_dir, filename)
+import subprocess
+import os
+
+def add_audio_to_segments(original_video: str, segment_details: list[Dict[str, Any]]) -> None:
+    """Adds properly aligned audio to segments using FFmpeg"""
+    for segment in segment_details:
+        input_path = segment["output_path"]
+        start = segment["start_time"]
+        end = segment["end_time"]
+        
+        # Create temp output path
+        base, ext = os.path.splitext(input_path)
+        temp_output = f"{base}_with_audio{ext}"
+        
+        # Build FFmpeg command to:
+        # 1. Extract exact audio segment from original video
+        # 2. Merge with video segment
+        cmd = [
+            "ffmpeg",
+            "-y",
+            "-ss", str(start),  # Start time for audio extraction
+            "-to", str(end),    # End time for audio extraction
+            "-i", original_video,
+            "-i", input_path,
+            "-c:v", "copy",     # Copy video stream
+            "-c:a", "aac",       # Encode audio to AAC for compatibility
+            "-map", "0:a",       # Use audio from first input
+            "-map", "1:v",       # Use video from second input
+            "-shortest",
+            temp_output
+        ]
+        
+        try:
+            # Run FFmpeg command
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
-            # Extract audio from original video
-            cmd = [
-                "ffmpeg",
-                "-y",
-                "-i", original_video,
-                "-i", input_path,
-                "-c", "copy",  # Stream copy (no re-encoding)
-                "-map", "0:a",  # Use audio from first input
-                "-map", "1:v",  # Use video from second input
-                "-shortest",
-                output_path
-            ]
-            
-            try:
-                subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                # Replace original with audio version
-                os.replace(output_path, input_path)
-                print(f"Added audio to: {filename}")
-            except Exception as e:
-                print(f"Error adding audio to {filename}: {str(e)}")
-    
-    # Clean up temp directory
-    try:
-        os.rmdir(temp_dir)
-    except OSError:
-        pass
+            # Replace original segment with new version
+            os.replace(temp_output, input_path)
+            print(f"Added audio to: {os.path.basename(input_path)}")
+        except Exception as e:
+            print(f"Error adding audio to segment: {str(e)}")
+            # Remove temp file if exists
+            if os.path.exists(temp_output):
+                os.remove(temp_output)

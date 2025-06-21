@@ -1,14 +1,39 @@
 import os
+import json
 from typing import Dict, Any
 from dotenv import load_dotenv
 from moviepy import VideoFileClip
+from pydantic import BaseModel, Field
+import subprocess
+from typing import Dict, Any
 
-from google.adk.agents import Agent
+from google.adk.agents import Agent, SequentialAgent
 
-from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT
+from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT, FORMATTER_AGENT_INSTRUCTION
 from .utils import add_audio_to_segments
 
 load_dotenv()
+
+class SegmentSchema(BaseModel):
+    topic: str = Field(description="Topic of the segment")
+    transcript: str = Field(description="Transcript of the segment")
+    start_time: str = Field(description="Start time of the segment")
+    end_time: str = Field(description="End time of the segment")
+
+class RankingOutput(BaseModel):
+    segment: SegmentSchema = Field(description="Segment of the video")
+    clarity_score: int = Field(description="Clarity score of the segment out of 10")
+    engagement_score: int = Field(description="Engagement score of the segment out of 10")
+    trending_score: int = Field(description="Trending score of the segment out of 10")
+    overall_score: float = Field(description="Overall score of the segment out of 10")
+
+class RankingAgentOutput(BaseModel):
+    ranked_list: list[RankingOutput] = Field(description="List of segments ranked based on overall score")
+    video_path: str = Field(description="Path to the video file")
+
+class VideoSegmenterAgentOutput(BaseModel):
+    video_segments: list[str] = Field(description="List of video segments")
+
 def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Agent tool that splits video into segments based on JSON data containing start/end times
@@ -19,159 +44,120 @@ def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
             - ranked_segments: Dictionary with a "ranked_list" key containing segments 
               with nested "segment" objects that have "start_time", "end_time", and "topic" fields
             - output_dir: Directory to save the segmented video files
-    Returns:
-        A dictionary containing information about the created segments
-    """
-    output_dir = "segments"
-
-    if "output_dir" in json_data:
-        output_dir = json_data["output_dir"]
     
+    Returns:
+        A dictionary containing:
+            - status: "success" or "error"
+            - segments: List of dictionaries with segment details including output_path
+    """
+    output_dir = json_data.get("output_dir", "segments")
     print("[*] Video segmentation tool called with PARAMS:", json_data, "output_dir:", output_dir)
     
-    # Use a file-based tracking system instead of context
-    # since context access is problematic
-    session_id = json_data.get("session_id", "default_session")
-    video_path = json_data.get("video_path", "unknown_video")
-    video_basename = os.path.basename(video_path)
-    
-    # Create a unique tracking file for this job
-    tracking_dir = os.path.join(os.path.dirname(output_dir), ".tracking")
-    os.makedirs(tracking_dir, exist_ok=True)
-    tracking_file = os.path.join(tracking_dir, f"{session_id}_{video_basename}.lock")
-    
-    # Check if we've already processed this video
-    if os.path.exists(tracking_file):
-        try:
-            with open(tracking_file, 'r') as f:
-                saved_output_dir = f.read().strip()
-                
-            # If we already segmented this video to this output directory, return cached info
-            if saved_output_dir == output_dir:
-                print(f"[INFO] Video {video_basename} already segmented to {output_dir}")
-                
-                # Try to read result file if it exists
-                result_file = os.path.join(output_dir, "segmentation_result.json")
-                if os.path.exists(result_file):
-                    try:
-                        import json
-                        with open(result_file, 'r') as f:
-                            cached_result = json.load(f)
-                            return cached_result
-                    except:
-                        pass
-                        
-                # If we can't find the detailed results, return basic info
-                return {
-                    "status": "already_processed",
-                    "message": f"Video has already been segmented to {output_dir}",
-                    "output_directory": os.path.abspath(output_dir)
-                }
-        except:
-            # If there's an error reading the tracking file, proceed with processing
-            pass
-    
+    # Create output directory
     os.makedirs(output_dir, exist_ok=True)
     
-    # Use absolute path to avoid permission issues
-    if not os.path.isabs(video_path):
-        video_path = os.path.abspath(video_path)
-    
-    # Load video without audio first to avoid processing issues
-    video = VideoFileClip(video_path, audio=False)
-    
+    # Get absolute path to video
+    video_path = os.path.abspath(json_data["video_path"])
     segments = json_data["ranked_segments"]["ranked_list"]
     created_segments = []
     
+    # Load video to get duration
+    try:
+        video = VideoFileClip(video_path)
+        video_duration = video.duration
+        video.close()
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Failed to load video: {str(e)}"
+        }
+    
+    # Process each segment
     for i, segment_data in enumerate(segments):
         try:
-            # Handle nested segment structure
-            if "segment" in segment_data:
-                segment = segment_data["segment"]
-            else:
-                segment = segment_data
-            
-            # Extract start and end times
+            # Extract segment information
+            segment = segment_data.get("segment", segment_data)
             start = float(segment["start_time"])
             end = float(segment["end_time"])
             
-            # Handle segments that might exceed video duration
-            if end > video.duration:
-                end = video.duration
-            if start > video.duration:
+            # Validate time ranges
+            if start >= video_duration:
                 print(f"Skipping segment {i+1} (starts after video ends)")
                 continue
                 
-            clip = video.subclipped(start, end)
-            
-            # Get topic with fallback options
+            if end > video_duration:
+                end = video_duration
+                
+            # Create safe filename
             topic = segment.get("topic", f"Segment_{i+1}")
-            safe_topic = topic.replace(" ", "_").replace("/", "-")[:30]
+            safe_topic = "".join(c if c.isalnum() else "_" for c in topic)[:30]
             output_path = os.path.join(output_dir, f"seg_{i+1:02d}_{safe_topic}.mp4")
             
-            # Write without audio first (fixes the AttributeError)
-            clip.write_videofile(
-                output_path,
-                codec="libx264",
-                audio=False,  # Disable audio to avoid the error
-                logger=None,
-                threads=4  # Helps with processing speed
-            )
+            # Create video segment with FFmpeg (more reliable)
+            cmd = [
+                "ffmpeg",
+                "-y",
+                "-ss", str(start),
+                "-to", str(end),
+                "-i", video_path,
+                "-c:v", "copy",  # Copy video stream
+                "-an",           # No audio initially
+                output_path
+            ]
             
-            created_segments.append({
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            # Store segment details
+            segment_info = {
                 "index": i+1,
                 "topic": topic,
                 "start_time": start,
                 "end_time": end,
-                "output_path": output_path,
+                "output_path": os.path.abspath(output_path),
                 "duration": end - start
-            })
-            
+            }
+            created_segments.append(segment_info)
             print(f"Created video segment: {output_path}")
-            clip.close()
         
         except Exception as e:
             print(f"Error processing segment {i+1}: {str(e)}")
             continue
     
-    video.close()
-    
-    # Now add audio separately using FFmpeg
+    # Add properly aligned audio to all segments
     try:
-        add_audio_to_segments(video_path, output_dir)
+        add_audio_to_segments(video_path, created_segments)
     except Exception as e:
-        print(f"Warning: Could not add audio to segments: {str(e)}")
+        print(f"Error adding audio to segments: {str(e)}")
     
-    # Save the result
-    result = {
+    # Return results with focus on output paths
+    return {
         "status": "success",
-        "segments_created": len(created_segments),
-        "segment_details": created_segments,
+        "segments": created_segments,
         "output_directory": os.path.abspath(output_dir)
     }
-    
-    # Save result to a file for future reference
-    try:
-        import json
-        result_file = os.path.join(output_dir, "segmentation_result.json")
-        with open(result_file, 'w') as f:
-            json.dump(result, f, indent=2)
-    except Exception as e:
-        print(f"Warning: Could not save result file: {str(e)}")
-    
-    # Mark this video as processed by creating the tracking file
-    try:
-        with open(tracking_file, 'w') as f:
-            f.write(output_dir)
-    except Exception as e:
-        print(f"Warning: Could not create tracking file: {str(e)}")
-    
-    return result
 
-video_segmentation_agent = Agent(
+
+segmenter_agent = Agent(
     name="video_segmentation_agent",
     model="gemini-2.0-flash",
+    input_schema=RankingAgentOutput,
     description="Video segmentation agent that segments video based on start and endtime specified in the json input",
     instruction=VIDEO_SEGMENTATION_AGENT_PROMPT,
     tools=[video_segmentation_tool],
+    output_key="video_segmentation_list_output"
+)
+
+formatter_agent = Agent(
+    name="formatter_agent",
+    model="gemini-2.0-flash",
+    description="Formatter agent that formats the output of the video segmentation agent",
+    instruction=FORMATTER_AGENT_INSTRUCTION,
+    output_schema=VideoSegmenterAgentOutput,
+    output_key="format_output"
+)
+
+video_segmentation_agent = SequentialAgent(
+    name="root_agent",
+    sub_agents=[segmenter_agent, formatter_agent],
+    description="Root agent that orchestrates the video segmentation process"
 )
