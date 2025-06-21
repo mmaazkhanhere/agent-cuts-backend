@@ -3,36 +3,17 @@ import json
 from typing import Dict, Any
 from dotenv import load_dotenv
 from moviepy import VideoFileClip
-from pydantic import BaseModel, Field
 import subprocess
 from typing import Dict, Any
 
 from google.adk.agents import Agent, SequentialAgent
 
 from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT, FORMATTER_AGENT_INSTRUCTION
+from .types import VideoSegmenterAgentInput, VideoSegmenterAgentOutput
 from .utils import add_audio_to_segments
 
 load_dotenv()
 
-class SegmentSchema(BaseModel):
-    topic: str = Field(description="Topic of the segment")
-    transcript: str = Field(description="Transcript of the segment")
-    start_time: str = Field(description="Start time of the segment")
-    end_time: str = Field(description="End time of the segment")
-
-class RankingOutput(BaseModel):
-    segment: SegmentSchema = Field(description="Segment of the video")
-    clarity_score: int = Field(description="Clarity score of the segment out of 10")
-    engagement_score: int = Field(description="Engagement score of the segment out of 10")
-    trending_score: int = Field(description="Trending score of the segment out of 10")
-    overall_score: float = Field(description="Overall score of the segment out of 10")
-
-class RankingAgentOutput(BaseModel):
-    ranked_list: list[RankingOutput] = Field(description="List of segments ranked based on overall score")
-    video_path: str = Field(description="Path to the video file")
-
-class VideoSegmenterAgentOutput(BaseModel):
-    video_segments: list[str] = Field(description="List of video segments")
 
 def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -140,7 +121,7 @@ def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
 segmenter_agent = Agent(
     name="video_segmentation_agent",
     model="gemini-2.0-flash",
-    input_schema=RankingAgentOutput,
+    input_schema=VideoSegmenterAgentInput,
     description="Video segmentation agent that segments video based on start and endtime specified in the json input",
     instruction=VIDEO_SEGMENTATION_AGENT_PROMPT,
     tools=[video_segmentation_tool],
