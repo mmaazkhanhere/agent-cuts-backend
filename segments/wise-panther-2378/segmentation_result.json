@@ -1,0 +1,55 @@
+{
+  "status": "success",
+  "segments_created": 6,
+  "segment_details": [
+    {
+      "index": 1,
+      "topic": "Understanding Shame",
+      "start_time": 283.34976,
+      "end_time": 353.096,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_01_Understanding_Shame.mp4",
+      "duration": 69.74624
+    },
+    {
+      "index": 2,
+      "topic": "The Dark Side of Connection",
+      "start_time": 226.74976,
+      "end_time": 281.42975,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_02_The_Dark_Side_of_Connection.mp4",
+      "duration": 54.679990000000004
+    },
+    {
+      "index": 3,
+      "topic": "The Primacy of Connection",
+      "start_time": 193.1265,
+      "end_time": 226.08975,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_03_The_Primacy_of_Connection.mp4",
+      "duration": 32.963250000000016
+    },
+    {
+      "index": 4,
+      "topic": "Six Years of Research",
+      "start_time": 354.75600000000003,
+      "end_time": 421.74,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_04_Six_Years_of_Research.mp4",
+      "duration": 66.98399999999998
+    },
+    {
+      "index": 5,
+      "topic": "Storyteller vs. Researcher",
+      "start_time": 0.0,
+      "end_time": 110.60325,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_05_Storyteller_vs._Researcher.mp4",
+      "duration": 110.60325
+    },
+    {
+      "index": 6,
+      "topic": "The Professor's Measuring Stick",
+      "start_time": 110.22325,
+      "end_time": 192.7265,
+      "output_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378\\seg_06_The_Professor's_Measuring_Stic.mp4",
+      "duration": 82.50325
+    }
+  ],
+  "output_directory": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\wise-panther-2378"
+}

@@ -231,48 +231,6 @@ async def get_segments_info(unique_phrase: str):
     }
 
 
-@app.get('/sessions')
-async def list_sessions():
-    """List all processing sessions"""
-    sessions = session_manager.get_all_sessions()
-    
-    return {
-        "total_sessions": len(sessions),
-        "sessions": [
-            {
-                "unique_phrase": phrase,
-                "status": data["status"],
-                "created_at": data["created_at"],
-                "segment_count": len(data["segment_paths"])
-            }
-            for phrase, data in sessions.items()
-        ]
-    }
-
-
-@app.post('/process-video')
-async def process_video_direct(request: dict):
-    """Direct video processing using agent_cuts (synchronous)"""
-    try:
-        video_path = request.get("video_path")
-        if not video_path:
-            return {"status": "error", "message": "video_path is required"}
-        
-        # Process directly using agent_cuts
-        result = await process_video_with_agent_cuts(
-            video_path=video_path,
-            output_dir="segments/direct_process"
-        )
-        
-        return result
-        
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": str(e)
-        }
-
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
