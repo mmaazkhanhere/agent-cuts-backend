@@ -21,4 +21,4 @@ class CopyWriteOutput(BaseModel):
 
 
 class CopywriterAgentOutput(BaseModel):
-    video_segments: CopyWriteOutput = Field(description="Output of the copywriter agent")
+    video_segments: List[CopyWriteOutput] = Field(description="Output of the copywriter agent")

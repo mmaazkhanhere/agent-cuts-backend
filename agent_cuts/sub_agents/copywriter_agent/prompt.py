@@ -7,7 +7,7 @@ Given:
 Your output must include:
 1. **Title**: A concise, catchy, and relevant title for each segment, optimized for search and engagement.
 2. **Description**: A short, compelling summary (2-3 sentences) that describes the video'segment content and value to viewers.
-3. **Tags**: 5-10 relevant keywords or phrases to help the video segment reach its target audience.
+3. **Hashtags**: 5-10 relevant hashtags to help the video segment reach its target audience.
 4. **Metrics**: Suggest estimated metrics (e.g., expected engagement, reach, or other relevant KPIs) as a dictionary with float values.
 5. **Video File**: The file path of the generated or main video.
 
