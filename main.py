@@ -8,6 +8,7 @@ from agent_cuts_runner import process_video_with_agent_cuts_async
 from utils.session_manager import session_manager
 from utils.phrase_generator import generate_unique_phrase
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 import os
 import json
@@ -16,7 +17,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PORT = int(os.getenv("PORT", 8000))
-app = FastAPI(title="ClipGenius Agent Cuts API", version="3.0")
+app = FastAPI(title="Agent Cuts API", version="3.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount the segments directory as a static file server
 segments_dir = os.path.abspath("segments")
@@ -28,7 +37,7 @@ app.mount("/static/segments", StaticFiles(directory=segments_dir), name="segment
 @app.get("/")
 def get_root():
     return {
-        "message": "ClipGenius Agent Cuts API v3.0", 
+        "message": "Agent Cuts API v3.0", 
         "description": "Video processing using ADK sequential agents",
         "features": [
             "Video transcription with timestamps",
