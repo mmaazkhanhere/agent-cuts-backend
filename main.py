@@ -14,6 +14,8 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
+
+PORT = int(os.getenv("PORT", 8000))
 app = FastAPI(title="ClipGenius Agent Cuts API", version="3.0")
 
 # Mount the segments directory as a static file server
@@ -249,4 +251,4 @@ async def get_segments_info(unique_phrase: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
