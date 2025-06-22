@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 from agent_cuts_runner import process_video_with_agent_cuts_async
 from utils.session_manager import session_manager
 from utils.phrase_generator import generate_unique_phrase
+from fastapi.staticfiles import StaticFiles
 
 import os
 import json
@@ -14,6 +15,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 app = FastAPI(title="ClipGenius Agent Cuts API", version="3.0")
+
+# Mount the segments directory as a static file server
+segments_dir = os.path.abspath("segments")
+os.makedirs(segments_dir, exist_ok=True)
+app.mount("/static/segments", StaticFiles(directory=segments_dir), name="segments")
+
 
 
 @app.get("/")
@@ -65,7 +72,7 @@ async def process_video_background(unique_phrase: str, video_path: str):
         session_manager.update_progress(unique_phrase, "initializing", 5)
         
         # Create unique output directory
-        output_dir = os.path.abspath(f"segments/{unique_phrase}")
+        output_dir = os.path.abspath(f"segments")
         os.makedirs(output_dir, exist_ok=True)
         
         # Process video using agent_cuts
@@ -98,6 +105,11 @@ async def process_video_background(unique_phrase: str, video_path: str):
             # Complete
             session_manager.update_progress(unique_phrase, "completed", 100, segment_paths)
             print(f"[Background Task] Completed with {len(segment_paths)} segments")
+
+            # Delete original video file
+            if os.path.exists(video_path):
+                os.remove(video_path)
+                print(f"[Background Task] Deleted original video file: {video_path}")
             
         else:
             error_msg = result.get('error', 'Processing failed')
@@ -216,11 +228,15 @@ async def get_segments_info(unique_phrase: str):
     for i, path in enumerate(session["segment_paths"]):
         if os.path.exists(path):
             size = os.path.getsize(path)
+            filename = os.path.basename(path)
+
             segments_info.append({
                 "index": i,
                 "filename": os.path.basename(path),
                 "size_mb": round(size / (1024 * 1024), 2),
-                "download_url": f"/download-segment/{unique_phrase}/{i}"
+                "download_url": f"/download-segment/{unique_phrase}/{i}",
+                "static_url": f"/static/segments/{filename}"
+
             })
     
     return {

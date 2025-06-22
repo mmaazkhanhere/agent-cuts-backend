@@ -1,19 +1,20 @@
 import os
-import json
 from typing import Dict, Any
 from dotenv import load_dotenv
 from moviepy import VideoFileClip
-import subprocess
-from typing import Dict, Any
 
-from google.adk.agents import Agent, SequentialAgent
+from google.adk.agents import Agent
 
-from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT, FORMATTER_AGENT_INSTRUCTION
-from .types import VideoSegmenterAgentInput, VideoSegmenterAgentOutput
+from .prompt import VIDEO_SEGMENTATION_AGENT_PROMPT
 from .utils import add_audio_to_segments
+import shutil
+import subprocess
+
 
 load_dotenv()
 
+# Track processed sessions to avoid duplicate processing
+_processed_sessions = set()
 
 def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -24,15 +25,52 @@ def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
             - video_path: Path to the input video file
             - ranked_segments: Dictionary with a "ranked_list" key containing segments 
               with nested "segment" objects that have "start_time", "end_time", and "topic" fields
-            - output_dir: Directory to save the segmented video files
+            - session_id: (Optional) Unique session identifier
     
     Returns:
         A dictionary containing:
             - status: "success" or "error"
             - segments: List of dictionaries with segment details including output_path
     """
+    # Get session ID from input data or generate from video path
+    session_id = json_data.get("session_id", os.path.basename(os.path.dirname(json_data.get("video_path", ""))))
+    
+    # Check if this session has already been processed
+    if session_id in _processed_sessions:
+        print(f"[*] Session {session_id} already processed. Skipping video segmentation.")
+        
+        # Return existing segments if available
+        output_dir = json_data.get("output_dir", "segments")
+        if os.path.exists(output_dir):
+            segment_paths = []
+            for file in sorted(os.listdir(output_dir)):
+                if file.endswith('.mp4'):
+                    segment_path = os.path.join(output_dir, file)
+                    segment_paths.append({
+                        "output_path": os.path.abspath(segment_path),
+                        "filename": file
+                    })
+            
+            if segment_paths:
+                return {
+                    "status": "success",
+                    "message": "Using previously processed segments",
+                    "segments": segment_paths,
+                    "output_directory": os.path.abspath(output_dir)
+                }
+    
     output_dir = json_data.get("output_dir", "segments")
-    print("[*] Video segmentation tool called with PARAMS:", json_data, "output_dir:", output_dir)
+    print(f"[*] Video segmentation tool called with PARAMS: {json_data}, output_dir: {output_dir}")
+    
+    # Delete all files in the output directory if it exists
+    if os.path.exists(output_dir):
+        print(f"[*] Deleting all files in {output_dir}")
+        for item in os.listdir(output_dir):
+            item_path = os.path.join(output_dir, item)
+            if os.path.isfile(item_path):
+                os.unlink(item_path)
+            else:
+                shutil.rmtree(item_path)
     
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
@@ -110,35 +148,22 @@ def video_segmentation_tool(json_data: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         print(f"Error adding audio to segments: {str(e)}")
     
+    # Mark this session as processed
+    _processed_sessions.add(session_id)
+    print(f"[*] Session {session_id} marked as processed.")
+    
     # Return results with focus on output paths
+    print(f"[*] Created {len(created_segments)} segments in {output_dir} and ", created_segments)
     return {
         "status": "success",
         "segments": created_segments,
         "output_directory": os.path.abspath(output_dir)
     }
 
-
-segmenter_agent = Agent(
+video_segmentation_agent = Agent(
     name="video_segmentation_agent",
     model="gemini-2.0-flash",
-    input_schema=VideoSegmenterAgentInput,
     description="Video segmentation agent that segments video based on start and endtime specified in the json input",
     instruction=VIDEO_SEGMENTATION_AGENT_PROMPT,
     tools=[video_segmentation_tool],
-    output_key="video_segmentation_list_output"
-)
-
-formatter_agent = Agent(
-    name="formatter_agent",
-    model="gemini-2.0-flash",
-    description="Formatter agent that formats the output of the video segmentation agent",
-    instruction=FORMATTER_AGENT_INSTRUCTION,
-    output_schema=VideoSegmenterAgentOutput,
-    output_key="format_output"
-)
-
-video_segmentation_agent = SequentialAgent(
-    name="root_agent",
-    sub_agents=[segmenter_agent, formatter_agent],
-    description="Root agent that orchestrates the video segmentation process"
 )
