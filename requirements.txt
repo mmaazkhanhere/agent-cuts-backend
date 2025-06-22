@@ -95,4 +95,4 @@ wrapt==1.17.2
 zipp==3.21.0
 #For testing
 aiohttp
-PyAudio
+--only-binary=:all: PyAudio
