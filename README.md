@@ -1,201 +1,162 @@
-# ClipGenius Transcription Agent v2.0
+# **ClipGenius: AI-Powered Video Content Curation**
+ClipGenius is an advanced application designed to transform raw video into ready-to-post, high-impact social media content. By intelligently segmenting videos, scoring content, and generating compelling text, ClipGenius streamlines content creation for creators and marketers.
 
-Professional transcription agent built with Google ADK and Groq Whisper API, now organized as a proper Python package with sentence-level timestamps.
+## **Features**
+- **Intelligent Video Segmentation:** Divides videos into meaningful segments using a dedicated Video Segmentation Agent.
+- **Accurate Transcription:** Utilizes a robust Transcription Agent with sentence-level timestamps for precise text extraction from audio.
+- **Content Ranking & Scoring:** A Ranking Agent assesses each segment's trending potential, engagement, and overall score using Google Search for real-time insights.
+- **AI-Powered Content Generation:** A Content Writing Agent crafts engaging titles, descriptions, and relevant hashtags for each top-performing segment.
+- **Modular Agent Architecture:** Built with a clean, scalable structure, enabling easy integration of new functionalities.
+- **FastAPI Integration: Provides** a user-friendly API for seamless interaction and deployment.
 
-## 🏗️ **New Package Structure**
 
+## **🚀 Quick Start**
+To get started with ClipGenius, follow these steps:
+
+### **1. Environment Setup**
+Create a .env file in the root directory and populate it with your API keys:
 ```
-agent-cuts-backend/
-├── transcription_agent/           # 📦 Main transcription package
-│   ├── __init__.py               # Package interface
-│   ├── core/                     # Core functionality
-│   │   ├── __init__.py
-│   │   ├── engine.py             # Main transcription engine
-│   │   └── adk_agent.py          # Google ADK wrapper
-│   └── utils/                    # Utilities
-│       ├── __init__.py
-│       ├── audio_processing.py   # Audio extraction & chunking
-│       ├── groq_client.py        # Groq API client
-│       └── sentence_processor.py # Sentence-level timestamps
-├── main.py                       # FastAPI server
-├── test_package.py              # Test the new package
-└── demo_agent.py                # Weather agent example
-```
-
-## 🚀 **Quick Start**
-
-### **Option 1: Test the Package**
-```bash
-python test_package.py
-```
-
-### **Option 2: Use Directly in Code**
-```python
-from transcription_agent import transcribe_video
-
-result = await transcribe_video(
-    video_path="video.mp4",
-    sentence_level=True
-)
-```
-
-### **Option 3: FastAPI Server**
-```bash
-uvicorn main:app --reload
-# Visit http://localhost:8000/docs
-```
-
-## 🎯 **Key Features**
-
-- ✅ **Package-based Architecture** - Clean, modular code organization
-- ✅ **Sentence-Level Timestamps** - Precise timing for each sentence
-- ✅ **Word-Level Precision** - Uses Groq's word timestamps when available
-- ✅ **Intelligent Chunking** - Smart audio segmentation at natural pauses
-- ✅ **Parallel Processing** - Concurrent transcription for speed
-- ✅ **Dual API Support** - Direct transcription + ADK agent modes
-
-## 📊 **Sample Output**
-
-### Sentence-Level Timestamps:
-```json
-{
-  "sentence_segments": [
-    {
-      "sentence_id": "0_0",
-      "text": "Welcome to our podcast discussion.",
-      "start_time": 12.5,
-      "end_time": 15.2,
-      "duration": 2.7,
-      "word_count": 5,
-      "confidence": 0.95
-    },
-    {
-      "sentence_id": "0_1", 
-      "text": "Today we're talking about AI developments.",
-      "start_time": 15.8,
-      "end_time": 19.1,
-      "duration": 3.3,
-      "word_count": 7,
-      "confidence": 0.92
-    }
-  ]
-}
-```
-
-## 🔧 **Package Usage**
-
-### **Import Options:**
-```python
-# Main convenience function
-from transcription_agent import transcribe_video
-
-# Individual components
-from transcription_agent import (
-    TranscriptionEngine,
-    AudioProcessor, 
-    GroqTranscriptionClient,
-    SentenceProcessor
-)
-
-# ADK agent
-from transcription_agent import run_transcription_agent
-```
-
-### **Direct Engine Usage:**
-```python
-from transcription_agent import TranscriptionEngine
-
-engine = TranscriptionEngine(groq_api_key="your_key")
-result = await engine.transcribe_video("video.mp4", sentence_level=True)
-```
-
-## 🌐 **API Endpoints**
-
-### **POST /transcribe** - Direct Transcription
-```bash
-curl -X POST "http://localhost:8000/transcribe" \
-  -F "file=@video.mp4"
-```
-
-### **POST /transcribe-adk** - ADK Agent Mode
-```bash
-curl -X POST "http://localhost:8000/transcribe-adk" \
-  -F "file=@video.mp4"
-```
-*Requires both GROQ_API_KEY and GOOGLE_API_KEY*
-
-### **GET /health** - System Status
-```bash
-curl http://localhost:8000/health
-```
-
-## 🔑 **Environment Setup**
-
-Create `.env` file:
-```env
-# Required for transcription
+# Required for Transcription Agent
 GROQ_API_KEY=your_groq_key_here
 
-# Required only for ADK agent mode
+# Required for Google Search in Ranking Agent
 GOOGLE_API_KEY=your_google_ai_key_here
 ```
 
-**Get API Keys:**
-- **Groq**: https://console.groq.com/
-- **Google AI**: https://aistudio.google.com/
+**Get Your API Keys:**
 
-## 🧪 **Testing**
+*Groq*: https://console.groq.com/
+*Google AI Studio*: https://aistudio.google.com/ 
 
-### **Quick Package Test:**
+### **2. Install Dependencies**
+
 ```bash
-python test_package.py
+pip install -r requirements.txt
 ```
 
-### **Legacy Tests:**
+### **3. Install Dependencies**
+
 ```bash
-python test_comprehensive.py  # Full test suite
-python simple_test.py         # Direct transcription only
+uvicorn main:app --reload
 ```
 
-## ⚡ **Performance**
-
-- **Speed**: 1-3x real-time processing
-- **Accuracy**: 95%+ for clear audio
-- **Precision**: Word-level timestamps when available
-- **Scalability**: Parallel chunk processing
-- **Memory**: Efficient temporary file management
-
-## 🔍 **Troubleshooting**
-
-### **Package Import Issues:**
-```python
-# If imports fail, check your Python path
-import sys
-sys.path.append('/path/to/agent-cuts-backend')
-from transcription_agent import transcribe_video
+### **4. Run Agent**
+- Add video file to video directory
+- Go to the `agent_cuts` directory
+- Run the following command
+```bash
+adk run .
 ```
 
-### **API Key Issues:**
-- Direct mode needs only `GROQ_API_KEY`
-- ADK agent needs both `GROQ_API_KEY` and `GOOGLE_API_KEY`
+## **Project Structure**
 
-### **Audio Processing Issues:**
-- Ensure FFmpeg is installed and in PATH
-- Check supported formats: MP4, AVI, MOV, MKV, WEBM, MP3, WAV, M4A
-
-## 🚀 **Future Agents**
-
-The package structure is ready for additional agents:
 ```
 agent-cuts-backend/
-├── transcription_agent/     # ✅ Complete
-├── video_analysis_agent/    # 🔜 Coming next
-├── segment_agent/           # 🔜 Coming next
-└── orchestrator_agent/      # 🔜 Coming next
+├── agent_cuts/           # main agent
+│   ├── __init__.py               
+│   ├── sub_agent/            # sub agents involved in the agent flow
+│   │   ├── copywriter_agent     # agent to find hashtags, title, and description
+│   │   ├── ranking_agent             # Main transcription engine
+│   │   └── segmentation_agent          # Google ADK wrapper
+├   |   |__ transcription_agent             # Main transcription engine
+│   │   └── video_segmentation_agent
+|   | agent.py
+segments/                    # Video segments
+│   ├── seg_01
+├── main.py            # FastAPI server
+├── tests              # Tests
+└── utils              # Weather agent example
 ```
 
-Each agent will follow the same clean package structure for maintainability.
+## 🎯  **Key Agents & Their Roles**
 
----
+### **1. Transcription Agent**
+- **Purpose:** Converts spoken words in video segments into accurate, timestamped text.
+-  **Key Features:**
+    - Sentence-Level Timestamps: Provides precise timing for each sentence.
+    - Word-Level Precision: Leverages Groq's word timestamps for high accuracy.
+    - Intelligent Chunking: Segments audio at natural pauses for efficient processing.
+    - Parallel Processing: Concurrent transcription for speed.
+    - Dual API Support: Direct transcription (Groq) and ADK agent modes.
+- **External Tools**: Custom video transcription (Groq Whisper API).
+- **Sample Output:
+```json
+{
+  "segments" : [
+     {
+      "text": "Tanya Cushman Reviewer's Name Reviewer's Name So, I'll start with this.",
+      "start_time": 0.0,
+      "end_time": 18.72
+    },
+    {
+      "text": "A couple of years ago, an event planner called me because I was going to do a speaking event.",
+      "start_time": 17.74,
+      "end_time": 22.72
+    },
+    ]
+}
+```
 
-**Ready for production and hackathon deployment! 🏆**
+### **2. Video Segmentation Agent**
+- **Purpose:** Analyzes the video content to identify logical breaks and create distinct, meaningful segments.
+- **External Tools:** Custom video segmentation tool.
+
+### **3. Ranking Agent**
+- **Purpose:** Evaluates each video segment's potential for virality and engagement.
+- **Metrics:**
+    - **Trending Potential:** How likely the content is to become popular.
+    - **Engagement Potential:** How likely users are to interact with the content (likes, comments, shares).
+    - **Overall Score:** A comprehensive score based on a weighted combination of trending and engagement.
+- **External Tools:** Google Search (to gauge current trends and related content popularity).
+
+### **4. Content Writing Agent **
+- **Purpose:** Generates compelling textual assets for each high-scoring video segment.
+- **Output:** Optimized titles, descriptive summaries, and relevant hashtags, ready for social media posting.
+
+### **5. Orchestrator Agent**
+- **Purpose:** Manages the workflow between all other agents, ensuring a seamless and efficient content creation pipeline.
+
+
+## 🌐 API Endpoints
+
+ClipGenius provides the following FastAPI endpoints:
+
+### POST /process-video - Process a Video for Content Curation
+
+*Description:* Uploads a video file, processes it through all agents (segmentation, transcription, ranking, content writing), and returns curated content suggestions.
+
+*Request:* multipart/form-data with video file.
+
+bash
+curl -X POST "http://localhost:8000/process-video" \
+  -F "file=@your_video.mp4"
+
+
+### GET /health - System Status
+
+*Description:* Checks the health and availability of the ClipGenius API.
+
+*Request:* GET
+
+bash
+curl http://localhost:8000/health
+
+
+## Testing
+
+A comprehensive test suite is available to ensure the reliability and accuracy of each agent.
+
+## ⚡ Performance
+
+- *Speed:* Optimized for efficient processing, leveraging parallel execution where possible.
+- *Accuracy:* High precision in transcription, segmentation, and content generation.
+- *Scalability:* Designed with modularity to handle increasing workloads and future agent additions.
+
+## 🔍 Troubleshooting
+
+- *API Key Issues:* Ensure all required API keys (GROQ_API_KEY, GOOGLE_API_KEY, GOOGLE_CSE_ID) are correctly set in your .env file.
+- *FFmpeg:* Ensure FFmpeg is installed and accessible in your system's PATH for audio/video processing.
+- *Import Errors:* If you encounter ModuleNotFoundError, verify your Python environment and package installation.
+- *Supported Formats:* For video inputs, ensure you're using common formats like MP4, AVI, MOV, MKV, WEBM. For audio, MP3, WAV, M4A are supported.
+
+ClipGenius is production-ready for content creators and marketers looking to automate and optimize their video content strategy!
