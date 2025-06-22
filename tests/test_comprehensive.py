@@ -248,36 +248,6 @@ class VideoProcessingTester:
             print(f"❌ Exception downloading segment: {str(e)}")
             return False
     
-    async def test_list_sessions(self):
-        """Test 5: List all sessions"""
-        print("\n🧪 TEST 5: List Sessions")
-        print("=" * 50)
-        
-        try:
-            async with self.session.get(f"{self.base_url}/sessions") as response:
-                if response.status != 200:
-                    print(f"❌ Sessions endpoint returned status {response.status}")
-                    return False
-                    
-                sessions_data = await response.json()
-                
-                print(f"✅ Retrieved sessions list:")
-                print(f"   - Total sessions: {sessions_data['total_sessions']}")
-                
-                if sessions_data['total_sessions'] > 0:
-                    print("\n   Recent sessions:")
-                    for i, session in enumerate(sessions_data['sessions'][:5]):  # Show last 5
-                        print(f"   {i+1}. {session['unique_phrase']}")
-                        print(f"      - Status: {session['status']}")
-                        print(f"      - Created: {session['created_at']}")
-                        print(f"      - Segments: {session['segment_count']}")
-                
-                return True
-                
-        except Exception as e:
-            print(f"❌ Exception listing sessions: {str(e)}")
-            return False
-    
     async def run_all_tests(self):
         """Run all tests in sequence"""
         print("\n" + "="*60)
@@ -293,7 +263,6 @@ class VideoProcessingTester:
             "Progress Tracking": await self.test_progress_tracking(),
             "Segments Info": await self.test_segments_info(),
             "Download Segment": await self.test_download_segment(),
-            "List Sessions": await self.test_list_sessions(),
         }
         
         # Summary

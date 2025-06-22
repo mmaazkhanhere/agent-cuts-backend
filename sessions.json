@@ -178,5 +178,31 @@
       "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_05_The_Disconnection_Discovery.mp4"
     ],
     "error": null
+  },
+  "quick-jaguar-9016": {
+    "unique_phrase": "quick-jaguar-9016",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\quick-jaguar-9016\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-22T18:29:59.869527",
+    "updated_at": "2025-06-22T18:30:26.762388",
+    "segment_paths": [
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_01_Video_Test_Introduction.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_02_Test_Complete.mp4"
+    ],
+    "error": null
   }
 }
