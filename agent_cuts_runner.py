@@ -140,7 +140,7 @@ async def process_video_with_agent_cuts_async(
                             print("[INFO] Final response parsed as JSON:", final_data)
                         except json.JSONDecodeError:
                             print("[INFO] Final response is not JSON")
-                            # print("[INFO] Final response text:", final_response.strip())
+                            print("[INFO] Final response text:", final_response.strip())
                         break
         
         # Check final session state using await
