@@ -57,7 +57,7 @@ class SessionManager:
         
         return session
     
-    def update_progress(self, unique_phrase: str, step: str, percentage: int, segment_paths: list = None):
+    def update_progress(self, unique_phrase: str, step: str, percentage: int, segment_paths: list = None,copywriter_output= None):
         """Update session progress"""
         with self._lock:
             if unique_phrase in self.sessions:
@@ -70,6 +70,8 @@ class SessionManager:
                 
                 if segment_paths:
                     session["segment_paths"] = segment_paths
+                if copywriter_output:
+                    session["copywriter_output"] = copywriter_output
                 
                 session["updated_at"] = datetime.now().isoformat()
                 session["status"] = "processing" if percentage < 100 else "completed"

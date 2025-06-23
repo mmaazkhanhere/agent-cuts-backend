@@ -178,5 +178,437 @@
       "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_05_The_Disconnection_Discovery.mp4"
     ],
     "error": null
+  },
+  "swift-lightning-1285": {
+    "unique_phrase": "swift-lightning-1285",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\swift-lightning-1285\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-23T20:52:09.881321",
+    "updated_at": "2025-06-23T20:55:57.341909",
+    "segment_paths": [
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_01_The_Disconnection_Discovery.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_02_The_Research_Journey_Begins.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_03_The_Research_Deep_Dive.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_04_Researcher_or_Storyteller_.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_05_Introduction.mp4"
+    ],
+    "error": null
+  },
+  "elegant-viper-9978": {
+    "unique_phrase": "elegant-viper-9978",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\elegant-viper-9978\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "cutting_video",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video"
+      ],
+      "percentage": 80
+    },
+    "created_at": "2025-06-23T21:09:42.682787",
+    "updated_at": "2025-06-23T21:11:54.934444",
+    "segment_paths": [],
+    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+  },
+  "elegant-owl-4826": {
+    "unique_phrase": "elegant-owl-4826",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\elegant-owl-4826\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "ranking",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking"
+      ],
+      "percentage": 60
+    },
+    "created_at": "2025-06-23T21:12:26.170416",
+    "updated_at": "2025-06-23T21:12:26.170416",
+    "segment_paths": [],
+    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}",
+    "copywriter_output": {
+      "video_segments": [
+        {
+          "title": "Unraveling Shame: The Root of Disconnection",
+          "description": "Discover how asking about love and connection led to the surprising discovery of shame and its role in human disconnection. This segment explores the universal fear of not being worthy and the challenging truth about vulnerability, revealing why facing these emotions is crucial.",
+          "tags": [
+            "Shame",
+            "Vulnerability",
+            "Disconnection",
+            "Connection",
+            "EmotionalIntelligence",
+            "SelfWorth",
+            "HumanConnection",
+            "Psychology",
+            "PersonalGrowth",
+            "BreneBrown"
+          ],
+          "metrics": {
+            "clarity_score": 9,
+            "engagement_score": 9,
+            "trending_score": 8,
+            "overall_score": 8.7
+          }
+        },
+        {
+          "title": "The Quest for Connection: My Social Work Research Story",
+          "description": "Follow the journey of a social worker turned researcher who began her academic career challenging the notion that 'if you cannot measure it, it does not exist.' This segment delves into her initial passion for understanding human connection and her unique approach to tackling complex, messy topics.",
+          "tags": [
+            "ResearchJourney",
+            "SocialWork",
+            "Connection",
+            "Purpose",
+            "AcademicLife",
+            "HumanBehavior",
+            "QualitativeResearch",
+            "MeaningOfLife",
+            "CareerPath",
+            "PersonalDevelopment"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 7,
+            "trending_score": 8,
+            "overall_score": 7.3
+          }
+        },
+        {
+          "title": "Decades of Research: Unpacking Shame and Worthiness",
+          "description": "What started as a one-year project transformed into a six-year deep dive, analyzing thousands of stories to understand the complex nature of shame. This segment reveals the profound realization that a fundamental 'sense of worthiness' underpins our human experience.",
+          "tags": [
+            "ShameResearch",
+            "Worthiness",
+            "LongitudinalStudy",
+            "HumanExperience",
+            "DataAnalysis",
+            "SocialScience",
+            "PsychologyResearch",
+            "PersonalInsights",
+            "AcademicResearch",
+            "SelfWorth"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 7,
+            "overall_score": 7.3
+          }
+        },
+        {
+          "title": "Researcher or Storyteller? Embracing Both Identities",
+          "description": "An event planner's dilemma sparked an insightful journey into self-definition: is she a boring researcher or an engaging storyteller? This segment shares the speaker's personal struggle and ultimate embrace of the 'researcher storyteller' identity, highlighting how her work expanded her perception of life, love, work, and parenting.",
+          "tags": [
+            "Storytelling",
+            "Research",
+            "Identity",
+            "PersonalBranding",
+            "PublicSpeaking",
+            "AcademicLife",
+            "SpeakerJourney",
+            "ExpandingPerception",
+            "QualitativeResearcher",
+            "CareerIdentity"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 6,
+            "overall_score": 7.0
+          }
+        },
+        {
+          "title": "Opening Remarks: Tanya Cushman",
+          "description": "A brief introduction to the speaker, Tanya Cushman, setting the stage for her insightful presentation.",
+          "tags": [
+            "Introduction",
+            "Speaker",
+            "TanyaCushman",
+            "OpeningRemarks",
+            "Conference",
+            "Presentation"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 3,
+            "trending_score": 3,
+            "overall_score": 4.1
+          }
+        }
+      ]
+    }
+  },
+  "daring-whale-7340": {
+    "unique_phrase": "daring-whale-7340",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\daring-whale-7340\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "segmenting",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting"
+      ],
+      "percentage": 40
+    },
+    "created_at": "2025-06-23T21:20:58.169406",
+    "updated_at": "2025-06-23T21:22:13.790360",
+    "segment_paths": [],
+    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+  },
+  "mighty-lightning-3493": {
+    "unique_phrase": "mighty-lightning-3493",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\mighty-lightning-3493\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-23T21:22:59.136189",
+    "updated_at": "2025-06-23T21:27:54.045477",
+    "segment_paths": [
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_01_Discovering_Shame.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_02_Connection_and_Disconnection.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_03_The_Importance_of_Connection.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_04_Six_Years_of_Research.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_05_Storyteller_vs__Researcher.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_06_Background_in_Social_Work.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_07_Research_Professor_s_Words.mp4",
+      "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_08_Introduction.mp4"
+    ],
+    "error": null,
+    "copywriter_output": {
+      "video_segments": [
+        {
+          "title": "Understanding Shame: The Fear of Disconnection",
+          "description": "Dive deep into the true nature of shame, revealed as the universal fear of disconnection. This segment explores how shame manifests as the 'I'm not good enough' feeling and its deep link to vulnerability, urging us to embrace being truly seen.",
+          "tags": [
+            "Shame",
+            "Vulnerability",
+            "Connection",
+            "MentalHealth",
+            "SelfWorth",
+            "Disconnection",
+            "Empathy",
+            "PersonalGrowth",
+            "Psychology",
+            "EmotionalWellness"
+          ],
+          "metrics": {
+            "clarity_score": 9,
+            "engagement_score": 9,
+            "trending_score": 8,
+            "overall_score": 8.7
+          }
+        },
+        {
+          "title": "The Paradox of Connection: Why We Talk About Disconnection",
+          "description": "Discover a powerful insight: when asked about love, belonging, or connection, people often share stories of heartbreak and exclusion. This segment reveals how the early stages of research uncovered a hidden force that unravels genuine connection.",
+          "tags": [
+            "Connection",
+            "Disconnection",
+            "HumanExperience",
+            "ResearchInsights",
+            "LoveAndLoss",
+            "Belonging",
+            "EmotionalIntelligence",
+            "PersonalDevelopment",
+            "Vulnerability",
+            "Psychology"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 8,
+            "trending_score": 7,
+            "overall_score": 7.5
+          }
+        },
+        {
+          "title": "Why Connection is Essential: A Social Worker's Perspective",
+          "description": "Learn from a seasoned social worker why connection isn't just nice, it's fundamental to human existence. This segment highlights how feeling connected provides purpose and meaning, rooted in our very neurobiology, emphasizing its universal importance.",
+          "tags": [
+            "Connection",
+            "HumanNature",
+            "PurposeOfLife",
+            "SocialWork",
+            "MentalHealth",
+            "Wellbeing",
+            "Neurobiology",
+            "Empathy",
+            "Community",
+            "MeaningfulLife"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 7,
+            "overall_score": 7.3
+          }
+        },
+        {
+          "title": "The Breakthrough: A Decade of Research on Shame & Worthiness",
+          "description": "Discover the profound journey of a researcher whose initial one-year study on shame blossomed into six years of extensive investigation. This segment unveils the core finding: a sense of worthiness is the ultimate antidote to shame, derived from thousands of personal stories.",
+          "tags": [
+            "ShameResearch",
+            "Worthiness",
+            "PersonalStories",
+            "AcademicJourney",
+            "BreakthroughInsights",
+            "HumanConnection",
+            "SelfAcceptance",
+            "SocialScience",
+            "LongitudinalStudy",
+            "Empowerment"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 6,
+            "overall_score": 7.2
+          }
+        },
+        {
+          "title": "Embracing the 'Researcher-Storyteller' Identity",
+          "description": "Witness a pivotal moment as a researcher grapples with being labeled a 'storyteller' \u2013 a title that initially felt insecure. This segment highlights the journey of recognizing that collecting stories is indeed qualitative research, leading to a powerful dual identity that transformed her life and work.",
+          "tags": [
+            "Storyteller",
+            "Researcher",
+            "QualitativeResearch",
+            "AcademicLife",
+            "PersonalTransformation",
+            "Identity",
+            "PublicSpeaking",
+            "DataWithASoul",
+            "CareerJourney",
+            "ExpandingPerception"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 8,
+            "trending_score": 5,
+            "overall_score": 7.0
+          }
+        },
+        {
+          "title": "Social Work Philosophy: Embracing or Organizing Messy Life?",
+          "description": "Explore the fascinating contrast in social work philosophies: embracing life's messiness versus a desire to organize and understand it. This segment delves into the speaker's academic journey and her passion for 'hacking' into complex human topics to reveal their underlying structure.",
+          "tags": [
+            "SocialWork",
+            "LifePhilosophy",
+            "MessyLife",
+            "Organization",
+            "AcademicJourney",
+            "ResearchMethods",
+            "ProblemSolving",
+            "HumanBehavior",
+            "UnderstandingLife",
+            "SocialScience"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 7,
+            "trending_score": 5,
+            "overall_score": 6.7
+          }
+        },
+        {
+          "title": "If You Can't Measure It, It Doesn't Exist: A Research Principle",
+          "description": "Hear a foundational research principle from a professor that shaped the speaker's early academic career: 'If you cannot measure it, it does not exist.' This segment introduces the mindset of empirical rigor that challenged the speaker's prior assumptions.",
+          "tags": [
+            "ResearchPrinciples",
+            "AcademicLife",
+            "DoctoralStudent",
+            "Measurement",
+            "EmpiricalResearch",
+            "SocialScience",
+            "QuantitativeResearch",
+            "ResearchMethods",
+            "ChallengingAssumptions",
+            "HigherEducation"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 6,
+            "trending_score": 3,
+            "overall_score": 6.0
+          }
+        },
+        {
+          "title": "A Glimpse into Tanya Cushman's Insights",
+          "description": "An introductory segment to a powerful talk by Tanya Cushman, setting the stage for her upcoming discussion. This brief opening invites viewers to prepare for an insightful experience.",
+          "tags": [
+            "TanyaCushman",
+            "Introduction",
+            "Speaker",
+            "Insights",
+            "OpeningRemarks",
+            "Presentation",
+            "Welcome",
+            "NewPerspective",
+            "VideoSeries",
+            "ThoughtLeader"
+          ],
+          "metrics": {
+            "clarity_score": 6,
+            "engagement_score": 3,
+            "trending_score": 1,
+            "overall_score": 3.0
+          }
+        }
+      ]
+    }
+  },
+  "fearless-owl-2163": {
+    "unique_phrase": "fearless-owl-2163",
+    "video_path": "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\uploads\\fearless-owl-2163\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "cutting_video",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video"
+      ],
+      "percentage": 80
+    },
+    "created_at": "2025-06-23T21:42:27.361761",
+    "updated_at": "2025-06-23T21:44:36.049361",
+    "segment_paths": [],
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}, 'quotaValue': '200'}]}, {'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   }
 }
