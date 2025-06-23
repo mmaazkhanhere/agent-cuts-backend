@@ -1,5 +1,5 @@
 # **AgentCut: AI-Powered Video Content Curation**
-AgentCut is an advanced application designed to transform raw video into ready-to-post, high-impact social media content. By intelligently segmenting videos, scoring content, and generating compelling text, ClipGenius streamlines content creation for creators and marketers.
+AgentCut is an advanced application designed to transform raw video into ready-to-post, high-impact social media content. By intelligently segmenting videos, scoring content, and generating compelling text, AgentCut streamlines content creation for creators and marketers.
 
 ## **Features**
 - **Intelligent Video Segmentation:** Divides videos into meaningful segments using a dedicated Video Segmentation Agent.
