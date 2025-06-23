@@ -204,5 +204,53 @@
       "C:\\Users\\Boredaf\\Documents\\PersonalProjects\\agent-cuts-backend\\segments\\seg_02_Test_Complete.mp4"
     ],
     "error": null
+  },
+  "agile-cheetah-2219": {
+    "unique_phrase": "agile-cheetah-2219",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\agile-cheetah-2219\\demo.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-23T20:21:44.089735",
+    "updated_at": "2025-06-23T20:22:09.265698",
+    "segment_paths": [
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Introduction_to_YouTube_Chapte.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Test_Video_Introduction.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Transcription_Demo.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_02_Example_of_YouTube_Chapters.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_03_Summary.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_04_Creating_Chapters_in_Descripti.mp4"
+    ],
+    "error": null
+  },
+  "bold-lynx-0585": {
+    "unique_phrase": "bold-lynx-0585",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\bold-lynx-0585\\demo.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "transcribing",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing"
+      ],
+      "percentage": 20
+    },
+    "created_at": "2025-06-23T20:23:01.343968",
+    "updated_at": "2025-06-23T20:23:03.061316",
+    "segment_paths": [],
+    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
   }
 }
