@@ -149,7 +149,20 @@ async def process_video_with_agent_cuts_async(
             user_id=user_id,
             session_id=session_id
         )
-        
+        # Extract copywriter output from final session state
+        copywriter_output = None
+        if final_session and final_session.state:
+            # Look for copywriter_output in the state
+            if 'copywriter_output' in final_session.state:
+                try:
+                    # Parse the copywriter output if it's a string
+                    copywriter_data = final_session.state['copywriter_output']
+                    if isinstance(copywriter_data, str):
+                        copywriter_output = json.loads(copywriter_data.strip('```json\n').strip('\n```'))
+                    else:
+                        copywriter_output = copywriter_data
+                except json.JSONDecodeError:
+                    print("[WARNING] Could not parse copywriter output")
         if final_session and final_session.state:
             print("[INFO] Final session state:", json.dumps(final_session.state, indent=2))
             # Update processing state from session if available
@@ -186,5 +199,6 @@ async def process_video_with_agent_cuts_async(
         "segment_count": len(segment_paths),
         "processing_state": processing_state,
         "final_response": final_response,
-        "session_id": session_id
+        "session_id": session_id,
+        "copywriter_output": copywriter_output
     }

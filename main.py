@@ -113,8 +113,10 @@ async def process_video_background(unique_phrase: str, video_path: str):
             # Get final segments
             segment_paths = result.get('segment_paths', [])
             
+            # Get Copywriter output if available
+            copywriter_output = result.get('copywriter_output', None)
             # Complete
-            session_manager.update_progress(unique_phrase, "completed", 100, segment_paths)
+            session_manager.update_progress(unique_phrase, "completed", 100, segment_paths, copywriter_output)
             print(f"[Background Task] Completed with {len(segment_paths)} segments")
 
             # Delete original video file
