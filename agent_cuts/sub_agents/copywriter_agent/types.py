@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import Dict, List
 
 from agent_cuts.sub_agents.ranking_agent.types import RankingAgentOutput
 
