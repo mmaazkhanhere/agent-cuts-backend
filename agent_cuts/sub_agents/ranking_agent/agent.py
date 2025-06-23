@@ -6,6 +6,7 @@ from google.adk.tools import google_search
 from .prompt import SCORING_AGENT_PROMPT, FORMATTER_AGENT_PROMPT
 from .types import RankingAgentOutput
 from agent_cuts.sub_agents.segmentation_agent.type import SegmentationAgentOutput
+from google.adk.models.lite_llm import LiteLlm
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ combined_scoring_agent = Agent(
 
 formatter_agent = Agent(
     name="formatter_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.0-flash-lite",
     description="Sort and format the scored segments.",
     instruction=FORMATTER_AGENT_PROMPT,
     output_schema=RankingAgentOutput,

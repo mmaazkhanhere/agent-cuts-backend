@@ -5,6 +5,7 @@ from google.adk.agents import Agent,LlmAgent
 from .prompt import SEGMENTATION_AGENT_PROMPT
 from .type import SegmentationAgentOutput
 from agent_cuts.sub_agents.transcription_agent.types import TranscriptAgentOutput
+from google.adk.models.lite_llm import LiteLlm
 
 load_dotenv()
 

@@ -15,7 +15,7 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
-app = FastAPI(title="ClipGenius Agent Cuts API", version="3.0")
+app = FastAPI(title="Agent Cuts API", version="3.0")
 # Mount the segments directory as a static file server
 segments_dir = os.path.abspath("segments")
 os.makedirs(segments_dir, exist_ok=True)
@@ -32,7 +32,7 @@ app.add_middleware(
 @app.get("/")
 def get_root():
     return {
-        "message": "ClipGenius Agent Cuts API v3.0", 
+        "message": "Agent Cuts API v3.0", 
         "description": "Video processing using ADK sequential agents",
         "features": [
             "Video transcription with timestamps",

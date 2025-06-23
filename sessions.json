@@ -1,0 +1,456 @@
+{
+  "heroic-jaguar-1849": {
+    "unique_phrase": "heroic-jaguar-1849",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\heroic-jaguar-1849\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-24T00:11:22.358972",
+    "updated_at": "2025-06-24T00:11:47.621336",
+    "segment_paths": [
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Test_Video_Introduction.mp4"
+    ],
+    "error": null,
+    "copywriter_output": {
+      "video_segments": [
+        {
+          "title": "Quick Test Video Introduction",
+          "description": "This brief segment serves as a simple test video, created to demonstrate basic video functionality. It contains just two sentences, perfect for a quick check of audio and visual clarity.",
+          "tags": [
+            "TestVideo",
+            "VideoDemo",
+            "ShortClip",
+            "Introduction",
+            "SampleVideo",
+            "TechTest"
+          ],
+          "metrics": {
+            "clarity_score": 10,
+            "engagement_score": 2,
+            "trending_score": 4,
+            "overall_score": 4.39
+          }
+        }
+      ]
+    }
+  },
+  "bright-whale-9207": {
+    "unique_phrase": "bright-whale-9207",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\bright-whale-9207\\test.mp4",
+    "status": "processing",
+    "progress": {
+      "current_step": "transcribing",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing"
+      ],
+      "percentage": 20
+    },
+    "created_at": "2025-06-24T00:13:19.604441",
+    "updated_at": "2025-06-24T00:13:19.625830",
+    "segment_paths": [],
+    "error": null
+  },
+  "inspired-cheetah-4998": {
+    "unique_phrase": "inspired-cheetah-4998",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\inspired-cheetah-4998\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "segmenting",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting"
+      ],
+      "percentage": 40
+    },
+    "created_at": "2025-06-24T00:16:41.843636",
+    "updated_at": "2025-06-24T00:17:38.597095",
+    "segment_paths": [],
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}, 'quotaValue': '200'}]}, {'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '21s'}]}}"
+  },
+  "daring-dragon-2115": {
+    "unique_phrase": "daring-dragon-2115",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\daring-dragon-2115\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "ranking",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking"
+      ],
+      "percentage": 60
+    },
+    "created_at": "2025-06-24T00:19:37.350477",
+    "updated_at": "2025-06-24T00:19:53.971262",
+    "segment_paths": [],
+    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}"
+  },
+  "wise-mamba-6224": {
+    "unique_phrase": "wise-mamba-6224",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\wise-mamba-6224\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "segmenting",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting"
+      ],
+      "percentage": 40
+    },
+    "created_at": "2025-06-24T00:26:34.204177",
+    "updated_at": "2025-06-24T00:27:11.785953",
+    "segment_paths": [],
+    "error": "litellm.InternalServerError: InternalServerError: GroqException - {\"error\":{\"message\":\"Internal Server Error\",\"type\":\"internal_server_error\"}}\n"
+  },
+  "elegant-hawk-0090": {
+    "unique_phrase": "elegant-hawk-0090",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\elegant-hawk-0090\\test.mp4",
+    "status": "failed",
+    "progress": {
+      "current_step": "segmenting",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting"
+      ],
+      "percentage": 40
+    },
+    "created_at": "2025-06-24T00:28:33.565728",
+    "updated_at": "2025-06-24T00:29:02.428759",
+    "segment_paths": [],
+    "error": "litellm.RateLimitError: RateLimitError: GroqException - {\"error\":{\"message\":\"Rate limit reached for model `qwen-qwq-32b` in organization `org_01jcb081a4et687vvyzy6vx67h` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Used 5558, Requested 4047. Please try again in 36.046s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n"
+  },
+  "sharp-tiger-3395": {
+    "unique_phrase": "sharp-tiger-3395",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\sharp-tiger-3395\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-24T00:31:44.136204",
+    "updated_at": "2025-06-24T00:33:19.011987",
+    "segment_paths": [
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Test_Video_Introduction.mp4"
+    ],
+    "error": null,
+    "copywriter_output": {
+      "video_segments": [
+        {
+          "title": "Unpacking Shame: The Fear of Disconnection",
+          "description": "Discover the true nature of shame \u2013 the universal fear of disconnection. This segment explains why we all experience it, how it links to the feeling of \"not good enough,\" and the crucial role of vulnerability in overcoming it. Learn why talking about shame is key to reducing its power in your life.",
+          "tags": [
+            "shame",
+            "disconnection",
+            "vulnerability",
+            "selfworth",
+            "mentalhealth",
+            "emotionalintelligence",
+            "humanconnection",
+            "brenebrown"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 9,
+            "trending_score": 9,
+            "overall_score": 8.6
+          }
+        },
+        {
+          "title": "When Connection Reveals Disconnection: The Discovery of Shame",
+          "description": "Ever wondered why asking about love often leads to stories of heartbreak? This compelling segment reveals how initial research into connection unexpectedly uncovered the profound impact of disconnection and the underlying force of shame. Hear the story of a researcher's pivotal discovery that changed everything.",
+          "tags": [
+            "connection",
+            "disconnection",
+            "shame",
+            "researchdiscovery",
+            "humanemotions",
+            "personalgrowth",
+            "insight",
+            "vulnerability"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 8,
+            "trending_score": 8,
+            "overall_score": 7.7
+          }
+        },
+        {
+          "title": "My Battle with Vulnerability: Can You Outsmart It?",
+          "description": "If you hate vulnerability, you're not alone! This speaker shares her personal struggle with vulnerability and her initial mission to \"beat it back with a measuring stick\" through rigorous research. Find out if her attempt to outsmart vulnerability succeeded and what critical lessons she learned along the way.",
+          "tags": [
+            "vulnerability",
+            "researchjourney",
+            "personalstruggle",
+            "shame",
+            "selfdiscovery",
+            "emotionalgrowth",
+            "lifelessons",
+            "authenticity"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 8,
+            "trending_score": 7,
+            "overall_score": 7.5
+          }
+        },
+        {
+          "title": "Why Connection Is Everything: A Social Worker's Perspective",
+          "description": "In this insightful segment, a seasoned social worker explains why connection is not just important, but fundamental to human existence. Discover how connection gives purpose and meaning to our lives, impacting everything from mental health to social justice. It's truly why we are here.",
+          "tags": [
+            "connection",
+            "socialwork",
+            "purposeoflife",
+            "meaningfulrelationships",
+            "mentalhealth",
+            "humanempathy",
+            "community",
+            "wellbeing"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 7,
+            "overall_score": 7.3
+          }
+        },
+        {
+          "title": "Storyteller or Researcher? Embracing a New Identity",
+          "description": "Join the speaker on her journey to defining her professional identity, caught between the labels of 'researcher' and 'storyteller.' This engaging introduction reveals how she navigated academic expectations and embraced a unique blend that fundamentally expanded her perception, changing how she lives, loves, works, and parents.",
+          "tags": [
+            "identity",
+            "storytelling",
+            "researcher",
+            "personalbranding",
+            "speakingevent",
+            "careerpath",
+            "perception",
+            "selfacceptance"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 5,
+            "overall_score": 6.8
+          }
+        },
+        {
+          "title": "From One Year to Six: The Unforeseen Depth of Shame Research",
+          "description": "What starts as a one-year study can evolve into a decade-long quest for understanding. This segment details how an ambitious research project on shame grew exponentially, encompassing thousands of stories and interviews. Explore the unexpected revelations that emerged from this extensive study, particularly regarding the profound concept of worthiness.",
+          "tags": [
+            "research",
+            "shame",
+            "worthiness",
+            "longitudionalstudy",
+            "qualitativeresearch",
+            "academicjourney",
+            "dataanalysis",
+            "personalrevelation"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 7,
+            "trending_score": 6,
+            "overall_score": 6.7
+          }
+        },
+        {
+          "title": "The Academic Mantra: If It Cannot Be Measured, It Does Not Exist",
+          "description": "Delve into the foundational beliefs that shaped a young researcher's career, including a stern professor's mantra: \"If you cannot measure it, it does not exist.\" This segment explores the speaker's drive to organize and understand messy topics, aiming to 'hack into important things and lay the code out for everyone to see,' despite a social work background that often embraces life's inherent messiness.",
+          "tags": [
+            "academiclife",
+            "researchphilosophy",
+            "socialwork",
+            "dataisdata",
+            "careerchoice",
+            "measurement",
+            "organization",
+            "problemSolving"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 6,
+            "trending_score": 4,
+            "overall_score": 5.6
+          }
+        }
+      ]
+    }
+  },
+  "kind-cobra-4887": {
+    "unique_phrase": "kind-cobra-4887",
+    "video_path": "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\uploads\\kind-cobra-4887\\test.mp4",
+    "status": "completed",
+    "progress": {
+      "current_step": "completed",
+      "steps_completed": [
+        "upload",
+        "initializing",
+        "transcribing",
+        "segmenting",
+        "ranking",
+        "cutting_video",
+        "completed",
+        "generating_copy"
+      ],
+      "percentage": 100
+    },
+    "created_at": "2025-06-24T00:38:41.020461",
+    "updated_at": "2025-06-24T00:41:02.283693",
+    "segment_paths": [
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_01_Understanding_Shame.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_02_The_Disconnection_Discovery.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_03_Six_Years_of_Research.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_04_Storyteller_Introduction.mp4",
+      "E:\\Web 3.0\\Generative AI\\Github\\agent-cuts-backend\\segments\\seg_05_Research_Origins.mp4"
+    ],
+    "error": null,
+    "copywriter_output": {
+      "video_segments": [
+        {
+          "title": "Unpacking Shame: The Universal Fear of Disconnection",
+          "description": "Explore the universal nature of shame, understood as the fear of disconnection. This segment delves into the 'I'm not good enough' feeling and its deep roots in vulnerability, challenging our perception of self-worth.",
+          "tags": [
+            "shame",
+            "vulnerability",
+            "disconnection",
+            "selfworth",
+            "emotionalintelligence",
+            "humanconnection",
+            "psychology",
+            "mentalhealth",
+            "personalgrowth",
+            "brenebrown"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 8,
+            "trending_score": 8,
+            "overall_score": 7.7
+          }
+        },
+        {
+          "title": "The Hidden Truth About Connection: A Journey to Shame",
+          "description": "Discover how a research project on human connection unexpectedly revealed the profound impact of heartbreak, exclusion, and ultimately, shame. This segment explores the surprising journey from seeking connection to understanding its greatest adversary: the fear of disconnection.",
+          "tags": [
+            "connection",
+            "disconnection",
+            "shame",
+            "heartbreak",
+            "belonging",
+            "research",
+            "emotionaldiscovery",
+            "humanexperience",
+            "socialwork",
+            "vulnerability"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 8,
+            "overall_score": 7.5
+          }
+        },
+        {
+          "title": "From 1 Year to 6: My Deep Dive into Shame Research",
+          "description": "Join the speaker on her six-year research odyssey, where a planned one-year study blossomed into an extensive exploration of shame. Learn how thousands of stories and interviews led to a groundbreaking understanding of shame and its link to our sense of worthiness.",
+          "tags": [
+            "research",
+            "shame",
+            "worthines",
+            "longitudinalstudy",
+            "qualitativeresearch",
+            "personaljourney",
+            "academicinsights",
+            "storytelling",
+            "humanbehavior",
+            "breakthrough"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 7,
+            "trending_score": 6,
+            "overall_score": 6.8
+          }
+        },
+        {
+          "title": "Researcher to Storyteller: Embracing a New Identity",
+          "description": "Hear the personal story of how an event planner's comment transformed a researcher's self-perception. This segment highlights the journey of embracing the 'researcher storyteller' identity and its role in expanding perception and enriching lives.",
+          "tags": [
+            "storyteller",
+            "researcher",
+            "identity",
+            "personalstory",
+            "publicspeaking",
+            "perception",
+            "careerjourney",
+            "authenticity",
+            "inspiration",
+            "academiclife"
+          ],
+          "metrics": {
+            "clarity_score": 8,
+            "engagement_score": 7,
+            "trending_score": 5,
+            "overall_score": 6.7
+          }
+        },
+        {
+          "title": "The Measurable Life: How Social Work Shaped My Research",
+          "description": "Delve into the foundational principles that shaped a researcher's career, from a social work background focused on 'messy' topics to a desire for measurable understanding. This segment explores the quest to 'hack into' important concepts and lay out their code for all to see, starting with the essence of human connection.",
+          "tags": [
+            "socialwork",
+            "researchorigins",
+            "connection",
+            "measurable",
+            "academicjourney",
+            "philosophy",
+            "purpose",
+            "humanbehavior",
+            "understanding",
+            "lifeslessons"
+          ],
+          "metrics": {
+            "clarity_score": 7,
+            "engagement_score": 6,
+            "trending_score": 7,
+            "overall_score": 6.5
+          }
+        }
+      ]
+    }
+  }
+}
