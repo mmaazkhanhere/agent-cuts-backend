@@ -8,6 +8,7 @@ from agent_cuts_runner import process_video_with_agent_cuts_async
 from utils.session_manager import session_manager
 from utils.phrase_generator import generate_unique_phrase
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 import os
 import json
@@ -15,12 +16,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 app = FastAPI(title="ClipGenius Agent Cuts API", version="3.0")
-
 # Mount the segments directory as a static file server
 segments_dir = os.path.abspath("segments")
 os.makedirs(segments_dir, exist_ok=True)
 app.mount("/static/segments", StaticFiles(directory=segments_dir), name="segments")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
