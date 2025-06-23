@@ -10,8 +10,9 @@ load_dotenv()
 
 video_segmentation_agent = Agent(
     name="video_segmentation_agent",
-    model="gemini-2.0-flash",
+    model="gemini-1.5-flash",
     description="Video segmentation agent that segments video based on start and endtime specified in the json input",
     instruction=VIDEO_SEGMENTATION_AGENT_PROMPT,
     tools=[video_segmentation_tool],
+
 )
